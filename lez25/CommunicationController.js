@@ -16,8 +16,20 @@ export default class CommunicationController {
 		let httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData);
 		const status = httpResponse.status;
 		if (status == 200) return await httpResponse.json();
-		else throw new Error("SERVER ERROR: " + status + " - " + httpResponse.text());
+		else throw new Error("SERVER ERROR: " + status + " - " + await httpResponse.text());
 	}
 
-	static async getRanking(sid) { return await this.request("ranking", "GET", { sid: sid }, {}); }
+	static async getObjectsNearby(sid, lat, lon) { return await this.request("objects", "GET", { sid, lat, lon }, {}); }
+
+	static async getObjectDetails(sid, id) { return await this.request("objects/" + id, "GET", { sid }, {}); }
+
+	static async activateObject(sid, id) { return await this.request("objects/" + id + "/activate", "POST", {}, { sid }); }
+
+	static async getUsersNearby(sid, lat, lon) { return await this.request("users", "GET", { sid, lat, lon }, {}); }
+
+	static async getUserDetails(sid, uid) { return await this.request("users/" + uid, "GET", { sid }, {}); }
+
+	static async updateUser(sid, uid, newName, newImage, newSharingPosition) { return await this.request("users/" + uid, "PATCH", {}, { sid: sid, name: newName, picture: newImage, positionshare: newSharingPosition }); }
+
+	static async getRanking(sid) { return await this.request("ranking", "GET", { sid }, {}); }
 }
