@@ -6,15 +6,65 @@ import { Button } from 'react-native';
 
 export default class App extends React.Component {
 
+	PAGES = { REGISTRATION: 0, MAIN: 1, SETTINGS: 2, RANKING: 3, OBJECTS: 4, USERS: 5, OBJECT_DETAILS: 6, USER_DETAILS: 7 }
+
 	state = {
-		sid: "qWpVdN4AxqXxOvu6gX1h",
+		sid: "EhJ9dY4pWw86sX43O2NI",
+		currentPage: this.PAGES.REGISTRATION,
 		testLat: 0,
 		testLon: 0,
 		testObjectID: "27",
-		testUserID: "513"	// Currently gives an error for update user as it's not me
+		testUserID: "14115"
 	}
 
 	render() {
+		let content = null
+
+		switch (this.state.currentPage) {
+			case this.PAGES.REGISTRATION:
+
+				break
+
+			case this.PAGES.MAIN:
+
+				break
+
+			case this.PAGES.SETTINGS:
+
+				break
+
+			case this.PAGES.RANKING:
+
+				break
+
+			case this.PAGES.OBJECTS:
+
+				break
+
+			case this.PAGES.USERS:
+
+				break
+
+			case this.PAGES.OBJECT_DETAILS:
+
+				break
+
+			case this.PAGES.USER_DETAILS:
+
+				break
+
+			default:
+				content = <Text>ERROR: Invalid page.</Text>
+				break
+		}
+
+		return (
+			<View style={styles.container}>
+				{content}
+				<StatusBar style="auto" />
+			</View>
+		)
+
 		return (
 			<View style={styles.container}>
 				<Button title="Register" onPress={() => this.handlePressRegisterUser()} />
@@ -23,7 +73,7 @@ export default class App extends React.Component {
 				<Button title="Activate object" onPress={() => this.handlePressActivateObject(this.state.testObjectID)} />
 				<Button title="Users nearby" onPress={() => this.handlePressUsersNearby(this.state.testLat, this.state.testLon)} />
 				<Button title="User details" onPress={() => this.handlePressUserDetails(this.state.testUserID)} />
-				<Button title="Update user" onPress={() => this.handlePressUpdateUser(this.state.testUserID, "TestLuca2", null, true)} />
+				<Button title="Update user" onPress={() => this.handlePressUpdateUser(this.state.testUserID, "TestLuca3", null, true)} />
 				<Button title="Ranking" onPress={() => this.handlePressRanking()} />
 				<StatusBar style="auto" />
 			</View>
@@ -31,6 +81,10 @@ export default class App extends React.Component {
 	}
 
 	async handlePressRegisterUser() {
+		if (this.state.sid == "EhJ9dY4pWw86sX43O2NI") {
+			console.log("Valid sid already present. Aborting server call.")
+			return
+		}
 		let { sid, uid } = await CommunicationController.registerUser()
 		console.log(sid, uid)
 		this.setState({ sid: sid, testUserID: uid })
