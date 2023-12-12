@@ -17,6 +17,7 @@ export default class App extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
+				<Button title="Register" onPress={() => this.handlePressRegisterUser()} />
 				<Button title="Objects nearby" onPress={() => this.handlePressObjectsNearby(this.state.testLat, this.state.testLon)} />
 				<Button title="Object details" onPress={() => this.handlePressObjectDetails(this.state.testObjectID)} />
 				<Button title="Activate object" onPress={() => this.handlePressActivateObject(this.state.testObjectID)} />
@@ -29,19 +30,46 @@ export default class App extends React.Component {
 		);
 	}
 
-	handlePressObjectsNearby(lat, lon) { CommunicationController.getObjectsNearby(this.state.sid, lat, lon).then((objects) => console.log(objects)) }
+	async handlePressRegisterUser() {
+		let { sid, uid } = await CommunicationController.registerUser()
+		console.log(sid, uid)
+		this.setState({ sid: sid, testUserID: uid })
+	}
 
-	handlePressObjectDetails(id) { CommunicationController.getObjectDetails(this.state.sid, id).then((obj) => console.log(obj)) }
+	async handlePressObjectsNearby(lat, lon) {
+		let objects = await CommunicationController.getObjectsNearby(this.state.sid, lat, lon)
+		console.log(objects)
+	}
 
-	handlePressActivateObject(id) { CommunicationController.activateObject(this.state.sid, id).then((user) => console.log(user)) }
+	async handlePressObjectDetails(id) {
+		let obj = await CommunicationController.getObjectDetails(this.state.sid, id)
+		console.log(obj)
+	}
 
-	handlePressUsersNearby(lat, lon) { CommunicationController.getUsersNearby(this.state.sid, lat, lon).then((users) => console.log(users)) }
+	async handlePressActivateObject(id) {
+		let user = await CommunicationController.activateObject(this.state.sid, id)
+		console.log(user)
+	}
 
-	handlePressUserDetails(uid) { CommunicationController.getUserDetails(this.state.sid, uid).then((user) => console.log(user)) }
+	async handlePressUsersNearby(lat, lon) {
+		let users = await CommunicationController.getUsersNearby(this.state.sid, lat, lon)
+		console.log(users)
+	}
 
-	handlePressUpdateUser(uid, newName, newImage, newSharingPosition) { CommunicationController.updateUser(this.state.sid, uid, newName, newImage, newSharingPosition).then((user) => console.log(user)) }
+	async handlePressUserDetails(uid) {
+		let user = await CommunicationController.getUserDetails(this.state.sid, uid)
+		console.log(user)
+	}
 
-	handlePressRanking() { CommunicationController.getRanking(this.state.sid).then((ranking) => console.log(ranking)) }
+	async handlePressUpdateUser(uid, newName, newImage, newSharingPosition) {
+		let user = await CommunicationController.updateUser(this.state.sid, uid, newName, newImage, newSharingPosition)
+		console.log(user)
+	}
+
+	async handlePressRanking() {
+		let ranking = await CommunicationController.getRanking(this.state.sid)
+		console.log(ranking)
+	}
 }
 
 const styles = StyleSheet.create({

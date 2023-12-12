@@ -19,6 +19,8 @@ export default class CommunicationController {
 		else throw new Error("SERVER ERROR: " + status + " - " + await httpResponse.text());
 	}
 
+	static async registerUser() { return await this.request("users", "POST", {}, {}) }
+
 	static async getObjectsNearby(sid, lat, lon) { return await this.request("objects", "GET", { sid, lat, lon }, {}); }
 
 	static async getObjectDetails(sid, id) { return await this.request("objects/" + id, "GET", { sid }, {}); }
