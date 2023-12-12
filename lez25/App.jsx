@@ -3,34 +3,57 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import CommunicationController from './CommunicationController';
 import { Button } from 'react-native';
+import RegistrationPage from './RegistrationPage';
+import MainPage from './MainPage';
+import SettingsPage from './SettingsPage';
 
 export default class App extends React.Component {
 
 	PAGES = { REGISTRATION: 0, MAIN: 1, SETTINGS: 2, RANKING: 3, OBJECTS: 4, USERS: 5, OBJECT_DETAILS: 6, USER_DETAILS: 7 }
 
 	state = {
-		sid: "EhJ9dY4pWw86sX43O2NI",
+		sid: null,
 		currentPage: this.PAGES.REGISTRATION,
-		testLat: 0,
-		testLon: 0,
-		testObjectID: "27",
-		testUserID: "14115"
+		selectedObjectID: null,
+		selectedUserID: null,
+		// TODO: move to a User local data
+		playerUserID: null,
+		playerLat: 0,
+		playerLon: 0
+
+		// Hardcoded values for testing
+		/*sid: "EhJ9dY4pWw86sX43O2NI",
+		currentPage: this.PAGES.REGISTRATION,
+		selectedObjectID: "27",
+		selectedUserID: "14115",
+		playerUserID: "14115",
+		playerLat: 0,
+		playerLon: 0*/
+	}
+
+	componentDidMount() {
+		this.checkUserRegistered()
 	}
 
 	render() {
 		let content = null
 
 		switch (this.state.currentPage) {
-			case this.PAGES.REGISTRATION:
 
+			case this.PAGES.REGISTRATION:
+				content = <RegistrationPage onPressRegisterUser={() => this.handlePressRegisterUser()} />
 				break
 
 			case this.PAGES.MAIN:
-
+				content = <MainPage
+					onGoToSettingsPage={() => this.handleGoToSettingsPage()}
+				/>
 				break
 
 			case this.PAGES.SETTINGS:
-
+				content = <SettingsPage
+					onPressGoBack={() => this.handleGoToMainPage()}
+				/>
 				break
 
 			case this.PAGES.RANKING:
@@ -68,26 +91,42 @@ export default class App extends React.Component {
 		return (
 			<View style={styles.container}>
 				<Button title="Register" onPress={() => this.handlePressRegisterUser()} />
-				<Button title="Objects nearby" onPress={() => this.handlePressObjectsNearby(this.state.testLat, this.state.testLon)} />
-				<Button title="Object details" onPress={() => this.handlePressObjectDetails(this.state.testObjectID)} />
-				<Button title="Activate object" onPress={() => this.handlePressActivateObject(this.state.testObjectID)} />
-				<Button title="Users nearby" onPress={() => this.handlePressUsersNearby(this.state.testLat, this.state.testLon)} />
-				<Button title="User details" onPress={() => this.handlePressUserDetails(this.state.testUserID)} />
-				<Button title="Update user" onPress={() => this.handlePressUpdateUser(this.state.testUserID, "TestLuca3", null, true)} />
+				<Button title="Objects nearby" onPress={() => this.handlePressObjectsNearby(this.state.playerLat, this.state.playerLon)} />
+				<Button title="Object details" onPress={() => this.handlePressObjectDetails(this.state.selectedObjectID)} />
+				<Button title="Activate object" onPress={() => this.handlePressActivateObject(this.state.selectedObjectID)} />
+				<Button title="Users nearby" onPress={() => this.handlePressUsersNearby(this.state.playerLat, this.state.playerLon)} />
+				<Button title="User details" onPress={() => this.handlePressUserDetails(this.state.selectedUserID)} />
+				<Button title="Update user" onPress={() => this.handlePressUpdateUser(this.state.selectedUserID, "TestLuca3", null, true)} />
 				<Button title="Ranking" onPress={() => this.handlePressRanking()} />
 				<StatusBar style="auto" />
 			</View>
 		);
 	}
 
+	checkUserRegistered() { if (this.state.sid == null) this.setState({ currentPage: this.PAGES.REGISTRATION }) }
+
+	/////////////////////////
+	//// BUTTON HANDLERS ////
+	/////////////////////////
+
+	//#region NAVIGATION
+
+	handleGoToMainPage() { this.setState({ currentPage: this.PAGES.MAIN, }) }
+	handleGoToObjectsPage() { this.setState({ currentPage: this.PAGES.OBJECTS, }) }
+	handleGoToObjectDetailsPage() { this.setState({ currentPage: this.PAGES.OBJECT_DETAILS, }) }
+	handleGoToUsersPage() { this.setState({ currentPage: this.PAGES.USERS, }) }
+	handleGoToUserDetailsPage() { this.setState({ currentPage: this.PAGES.USER_DETAILS, }) }
+	handleGoToSettingsPage() { this.setState({ currentPage: this.PAGES.SETTINGS, }) }
+	handleGoToRankingPage() { this.setState({ currentPage: this.PAGES.RANKING, }) }
+
+	//#endregion
+
+	//#region SERVER CALLS
+
 	async handlePressRegisterUser() {
-		if (this.state.sid == "EhJ9dY4pWw86sX43O2NI") {
-			console.log("Valid sid already present. Aborting server call.")
-			return
-		}
 		let { sid, uid } = await CommunicationController.registerUser()
 		console.log(sid, uid)
-		this.setState({ sid: sid, testUserID: uid })
+		this.setState({ sid: sid, playerUserID: uid, currentPage: this.PAGES.MAIN })
 	}
 
 	async handlePressObjectsNearby(lat, lon) {
@@ -124,6 +163,8 @@ export default class App extends React.Component {
 		let ranking = await CommunicationController.getRanking(this.state.sid)
 		console.log(ranking)
 	}
+
+	//#endregion
 }
 
 const styles = StyleSheet.create({
