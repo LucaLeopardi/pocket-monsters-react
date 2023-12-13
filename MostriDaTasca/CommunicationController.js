@@ -11,9 +11,14 @@ export default class CommunicationController {
 				"Content-Type": "application/json"
 			}
 		};
-		if (verb != "GET") fetchData.body = JSON.stringify(bodyParams);
+		if (verb != "GET") fetchData.body = JSON.stringify(bodyParams)
 
-		let httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData);
+		let httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData)
+		try {
+			httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData)
+		} catch (error) {
+			throw new Error("NETWORK ERROR: " + error.message)
+		}
 		const status = httpResponse.status;
 		if (status == 200) return await httpResponse.json();
 		else throw new Error("SERVER ERROR: " + status + " - " + await httpResponse.text());
