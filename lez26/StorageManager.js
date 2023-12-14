@@ -24,7 +24,7 @@ export default class StorageManager {
 					() => console.log("Table Users created"),
 					(_, error) => { throw new Error("Error creating table Users: " + error) })
 
-				tx.executeSql("CREATEasd TABLE IF NOT EXISTS Objects (\
+				tx.executeSql("CREATE TABLE IF NOT EXISTS Objects (\
 					id INTEGER PRIMARY KEY,\
 					type TEXT,\
 					level INTEGER,\
@@ -44,13 +44,8 @@ export default class StorageManager {
 	// Users
 
 	addUser(uid, name, lat, lon) {
-
-		//TODO: change to newer db.execAsync
-		this.db.transaction(
-			tx => {
-				// Use REPLACE instead of INSERT to avoid duplicates
-				tx.executeSql()
-			}
-		)
+		this.db.execAsync([{ query: "INSERT INTO Users (uid, name, lat, lon) VALUES (?, ?, ?, ?)", args: [uid, name, lat, lon] }], false)
+			.catch(error => { throw new Error("Error adding user: " + error) })
+			.then(console.log("User " + name + " added"))
 	}
 }
