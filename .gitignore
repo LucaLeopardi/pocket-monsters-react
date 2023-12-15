@@ -1,3 +1,6 @@
+# Debugging folder. Apparently.
+%ProgramData%
+
 # Logs
 logs
 *.log
