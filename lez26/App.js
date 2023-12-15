@@ -16,14 +16,12 @@ export default class App extends React.Component {
 	render() {
 		return (
 			<View style={styles.container} >
-				<Button onPress={() => this.addUser()} title="Add user" />
+				<Button onPress={() => this.state.db.addUser(2, "Pippo", 10, 10)} title="Add user" />
+				<Button onPress={() => this.state.db.getAllUsers().then(console.log)} title="Get all users" />
+				<Button onPress={() => this.state.db.getUserByID(1).then(console.log)} title="Get user Mario" />
 				<StatusBar style="auto" />
 			</View>
 		);
-	}
-
-	addUser() {
-		this.state.db.addUser("1", "Mario", 0, 0)
 	}
 }
 
