@@ -18,11 +18,11 @@ export default class App extends React.Component {
 			<View style={styles.container} >
 				<Button onPress={() => this.state.db.addUser(2, "Pippo", 10, 10)} title="Add user" />
 				<Button onPress={() => this.state.db.getAllUsers().then(console.log)} title="Get all users" />
-				<Button onPress={() => this.state.db.getUserByID(1).then(console.log)} title="Get user Mario" />
+				<Button onPress={() => this.state.db.getUserByID(99).then(console.log)} title="Get user Paperino" />
 
 				<Button onPress={() => this.state.db.addObject(1, "Spada", 15, 15)} title="Add object" />
 				<Button onPress={() => this.state.db.getAllObjects().then(console.log)} title="Get all objects" />
-				<Button onPress={() => this.state.db.getObjectByID(1).then(console.log)} title="Get object" />
+				<Button onPress={() => this.state.db.getObjectByID(99).then(console.log)} title="Get object Glock" />
 
 				<StatusBar style="auto" />
 			</View>

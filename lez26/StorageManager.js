@@ -46,6 +46,40 @@ export default class StorageManager {
 		return results
 	}
 
+	async dummyServerGetUserByID(uid) {
+		// wait for 1 second to simulate server latency and return hardcoded user
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		return {
+			uid: 99,
+			name: "Paperino",
+			lat: 5,
+			lon: 5,
+			timestamp: "2020-12-12 12:12:12",
+			hp: 100,
+			xp: 100,
+			weaponID: 1,
+			armorID: 1,
+			amuletID: 1,
+			image: "https://i.imgur.com/3Y5m4vR.png",
+			profileVersion: 1,
+			positionSharing: true
+		}
+	}
+
+	async dummyServerGetObjectByID(id) {
+		// wait for 1 second to simulate server latency and return hardcoded object
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		return {
+			id: 99,
+			type: "weapon",
+			level: 99,
+			lat: 15,
+			lon: 15,
+			image: null,
+			name: "Glock"
+		}
+	}
+
 
 	// Users
 
@@ -93,7 +127,13 @@ export default class StorageManager {
 	async getUserByID(uid) {
 		let query = { sql: "SELECT * FROM Users WHERE uid = ?", args: [uid] }
 		let results = await this.db.execAsync([query], true)
-		return results[0].rows
+		if (results[0].rows.length != 0) return results[0].rows
+
+		console.log("User not found in local DB, getting from server...")
+		let user = await this.dummyServerGetUserByID(uid)
+		// INSERT to local DB is called, but the server's result is immediatly returned for responsiveness
+		this.addUser(user.uid, user.name, user.lat, user.lon)
+		return [user]
 	}
 
 
@@ -116,6 +156,12 @@ export default class StorageManager {
 	async getObjectByID(id) {
 		let query = { sql: "SELECT * FROM Objects WHERE id = ?", args: [id] }
 		let results = await this.db.execAsync([query], true)
-		return results[0].rows
+		if (results[0].rows.length != 0) return results[0].rows
+
+		console.log("Object not found in local DB, getting from server...")
+		let object = await this.dummyServerGetObjectByID(id)
+		// INSERT to local DB is called, but the server's result is immediatly returned for responsiveness
+		this.addObject(object.id, object.type, object.level, object.lat, object.lon, object.image, object.name)
+		return [object]
 	}
 }
