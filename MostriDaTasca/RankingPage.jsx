@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import UsersListItem from './UsersListItem'
+import CommunicationController from './CommunicationController'
+import { SIDContext } from './Contexts'
 
 export default function RankingPage({ navigation, route }) {
 
+	const { sid } = useContext(SIDContext)
 	const [ranking, setRanking] = useState([])
-	useEffect(() => { route.params.getRanking().then(setRanking) }, [])	// Calling setRanking triggers a re-render 
+
+	useEffect(() => { CommunicationController.getRanking(sid).then(setRanking) }, [])	// Calling setRanking triggers a re-render 
 
 	return (
 		<View>

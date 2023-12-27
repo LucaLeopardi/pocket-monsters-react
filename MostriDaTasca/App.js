@@ -3,6 +3,8 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
+// Contexts
+import { SIDContext } from './Contexts';
 // React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -43,26 +45,25 @@ export default class App extends React.Component {
 
 	render() {
 		return (
-			<NavigationContainer>
-				<Stack.Navigator initialRouteName='Registration'>
-					<Stack.Screen name="Registration" component={RegistrationPage} />
-					<Stack.Screen name="Main" component={MainPage} />
-					<Stack.Screen name="Settings" component={SettingsPage} />
-					<Stack.Screen name="Ranking" component={RankingPage}
-						initialParams={{
-							getRanking: this.handlePressGetRanking
-						}} />
-					<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage} />
-					<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
-					<Stack.Screen name="UsersNearby" component={UsersNearbyPage}
-						initialParams={{
-							getUsersNearby: this.handlePressUsersNearby,
-							getPlayerPosition: this.getPlayerPosition
-						}} />
-					<Stack.Screen name="UserDetails" component={UserDetailsPage}
+			<SIDContext.Provider value={{ sid: this.state.sid, setSID: (sid) => this.setState({ sid: sid }) }}>
+				<NavigationContainer>
+					<Stack.Navigator initialRouteName='Registration'>
+						<Stack.Screen name="Registration" component={RegistrationPage} />
+						<Stack.Screen name="Main" component={MainPage} />
+						<Stack.Screen name="Settings" component={SettingsPage} />
+						<Stack.Screen name="Ranking" component={RankingPage} />
+						<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage} />
+						<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
+						<Stack.Screen name="UsersNearby" component={UsersNearbyPage}
+							initialParams={{
+								getUsersNearby: this.handlePressUsersNearby,
+								getPlayerPosition: this.getPlayerPosition
+							}} />
+						<Stack.Screen name="UserDetails" component={UserDetailsPage}
 						/* TODO */ />
-				</Stack.Navigator>
-			</NavigationContainer>
+					</Stack.Navigator>
+				</NavigationContainer>
+			</SIDContext.Provider>
 		)
 
 		/*
