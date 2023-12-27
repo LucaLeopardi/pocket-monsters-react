@@ -1,8 +1,11 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import CommunicationController from './CommunicationController';
 import { Button } from 'react-native';
+import * as Location from 'expo-location';
+import MapView, { Circle, Marker } from 'react-native-maps';
+import * as SQLite from 'expo-sqlite';
+import CommunicationController from './CommunicationController';
 import RegistrationPage from './RegistrationPage';
 import MainPage from './MainPage';
 import SettingsPage from './SettingsPage';
@@ -23,8 +26,8 @@ export default class App extends React.Component {
 		selectedUserID: null,
 		// TODO: move to a User local data
 		playerUserID: null,
-		playerLat: 0,
-		playerLon: 0
+		playerLat: 0.0,
+		playerLon: 0.0,
 	}
 
 	componentDidMount() { this.checkUserRegistered() }
@@ -90,23 +93,14 @@ export default class App extends React.Component {
 		return (
 			<View style={styles.container}>
 				{content}
-				<StatusBar style="auto" />
+				<StatusBar style="auto" hidden={true} />
 			</View>
 		)
-
-		return (
-			<View style={styles.container}>
-
-				<Button title="Object details" onPress={() => this.handlePressObjectDetails(this.state.selectedObjectID)} />
-				<Button title="Activate object" onPress={() => this.handlePressActivateObject(this.state.selectedObjectID)} />
-				<Button title="User details" onPress={() => this.handlePressUserDetails(this.state.selectedUserID)} />
-				<Button title="Ranking" onPress={() => this.handlePressGetRanking()} />
-			</View>
-		);
 	}
 
 	checkUserRegistered = () => { if (this.state.sid == null) this.setState({ currentPage: this.PAGES.REGISTRATION }) }
 	getPlayerPosition = () => { return { lat: this.state.playerLat, lon: this.state.playerLon } }
+
 	/////////////////////////
 	//// BUTTON HANDLERS ////
 	/////////////////////////
@@ -167,7 +161,6 @@ export default class App extends React.Component {
 		console.log(ranking)
 		return ranking
 	}
-
 	//#endregion
 }
 
