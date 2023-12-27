@@ -1,11 +1,11 @@
 import { View, Text, Button } from 'react-native'
 
-export default function SettingsPage(props) {
+export default function SettingsPage({ navigation, onPressUpdateUser, uid }) {
 	return (
 		<View>
-			<Button title="< Back" onPress={props.onPressGoBack} />
+			<Button title="< Back" onPress={() => navigation.goBack()} />
 			<Text style={{ fontSize: 28, fontWeight: 'bold' }}>{ }'s profile</Text>
-			<Button title="Update" onPress={() => props.onPressUpdateUser(props.uid, "LucaTest", null, true)} />
+			<Button title="Update" onPress={() => onPressUpdateUser(uid, "LucaTest", null, true)} />
 		</View>
 	)
 }

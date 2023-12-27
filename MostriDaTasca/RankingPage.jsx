@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import UsersListItem from './UsersListItem'
 
-export default function RankingPage({ onPressGoBack, getRanking }) {
+export default function RankingPage({ navigation, route }) {
 
 	const [ranking, setRanking] = useState([])
-	useEffect(() => { getRanking().then(setRanking) }, [])	// Calling setRanking triggers a re-render 
+	useEffect(() => { route.params.getRanking().then(setRanking) }, [])	// Calling setRanking triggers a re-render 
 
 	return (
 		<View>
-			<Button title="< Back" onPress={onPressGoBack} />
+			<Button title="< Back" onPress={() => navigation.goBack()} />
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Top players</Text>
 			<FlatList
 				data={ranking}

@@ -1,10 +1,17 @@
+// Basic stuff
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
+// React Navigation
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// Location and maps
 import * as Location from 'expo-location';
 import MapView, { Circle, Marker } from 'react-native-maps';
+// SQLite
 import * as SQLite from 'expo-sqlite';
+// My components and classes
 import CommunicationController from './CommunicationController';
 import RegistrationPage from './RegistrationPage';
 import MainPage from './MainPage';
@@ -14,6 +21,8 @@ import ObjectsNearbyPage from './ObjectsNearbyPage';
 import ObjectDetailsPage from './ObjectDetailsPage';
 import UsersNearbyPage from './UsersNearbyPage';
 import UserDetailsPage from './UserDetailsPage';
+
+const Stack = createNativeStackNavigator();
 
 export default class App extends React.Component {
 
@@ -33,6 +42,30 @@ export default class App extends React.Component {
 	componentDidMount() { this.checkUserRegistered() }
 
 	render() {
+		return (
+			<NavigationContainer>
+				<Stack.Navigator initialRouteName='Registration'>
+					<Stack.Screen name="Registration" component={RegistrationPage} />
+					<Stack.Screen name="Main" component={MainPage} />
+					<Stack.Screen name="Settings" component={SettingsPage} />
+					<Stack.Screen name="Ranking" component={RankingPage}
+						initialParams={{
+							getRanking: this.handlePressGetRanking
+						}} />
+					<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage} />
+					<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
+					<Stack.Screen name="UsersNearby" component={UsersNearbyPage}
+						initialParams={{
+							getUsersNearby: this.handlePressUsersNearby,
+							getPlayerPosition: this.getPlayerPosition
+						}} />
+					<Stack.Screen name="UserDetails" component={UserDetailsPage}
+						/* TODO */ />
+				</Stack.Navigator>
+			</NavigationContainer>
+		)
+
+		/*
 		let content = null
 
 		switch (this.state.currentPage) {
@@ -96,6 +129,7 @@ export default class App extends React.Component {
 				<StatusBar style="auto" hidden={true} />
 			</View>
 		)
+		*/
 	}
 
 	checkUserRegistered = () => { if (this.state.sid == null) this.setState({ currentPage: this.PAGES.REGISTRATION }) }
@@ -106,7 +140,7 @@ export default class App extends React.Component {
 	/////////////////////////
 
 	//#region NAVIGATION
-
+	/*
 	handleGoToMainPage = () => { this.setState({ currentPage: this.PAGES.MAIN, }) }
 	handleGoToObjectsNearbyPage = () => { this.setState({ currentPage: this.PAGES.OBJECTS_NEARBY, }) }
 	handleGoToObjectDetailsPage = () => { this.setState({ currentPage: this.PAGES.OBJECT_DETAILS, }) }
@@ -114,7 +148,7 @@ export default class App extends React.Component {
 	handleGoToUserDetailsPage = () => { this.setState({ currentPage: this.PAGES.USER_DETAILS, }) }
 	handleGoToSettingsPage = () => { this.setState({ currentPage: this.PAGES.SETTINGS, }) }
 	handleGoToRankingPage = () => { this.setState({ currentPage: this.PAGES.RANKING, }) }
-
+	*/
 	//#endregion
 
 	//#region SERVER CALLS
