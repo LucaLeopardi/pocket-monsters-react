@@ -1,16 +1,20 @@
 import { View, Text, Button } from 'react-native'
 import CommunicationController from './CommunicationController'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { SIDContext } from './Contexts'
 
 export default function RegistrationPage({ navigation }) {
 
 	const { sid, setSID } = useContext(SIDContext)
 
+	useEffect(() => {
+		console.log("SID: " + sid);
+		if (sid) navigation.navigate("Main")
+		else if (sid === undefined) throw new Error("SID couldn't be retrieved")
+	}, [sid]);
+
 	handlePressRegister = async () => {
 		setSID((await CommunicationController.registerUser()).sid)
-		// TODO: also save uid
-		navigation.navigate("Main")
 	}
 
 	return (

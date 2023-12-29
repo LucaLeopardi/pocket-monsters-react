@@ -5,6 +5,7 @@ export default function ObjectDetailsPage({ navigation }) {
 		<View>
 			<Button title="< Back" onPress={() => navigation.goBack()} />
 			<Text style={{ fontSize: 22, fontWeight: 'bold' }}></Text>
+
 		</View>
 	)
 }

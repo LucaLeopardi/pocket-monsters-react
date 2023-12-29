@@ -10,7 +10,7 @@ export default function UsersNearbyPage({ navigation, route }) {
 
 	return (
 		<View>
-			<Button title="< Back" onPress={navigation.goBack()} />
+			<Button title="< Back" onPress={navigation.goBack} />
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Players nearby</Text>
 			<FlatList
 				data={users}
