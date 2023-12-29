@@ -13,7 +13,7 @@ export default class CommunicationController {
 		};
 		if (verb != "GET") fetchData.body = JSON.stringify(bodyParams)
 
-		let httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData)
+		let httpResponse
 		try {
 			httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData)
 		} catch (error) {

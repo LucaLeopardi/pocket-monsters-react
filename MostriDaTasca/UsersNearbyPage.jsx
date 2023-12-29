@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import UsersListItem from './UsersListItem'
+import CommunicationController from './CommunicationController'
+import { SIDContext, LocationContext } from './Contexts'
 
-export default function UsersNearbyPage({ navigation, route }) {
+export default function UsersNearbyPage({ navigation }) {
 
+	const { sid } = useContext(SIDContext)
+	const { lat, lon } = useContext(LocationContext)
 	const [users, setUsers] = useState([])
-	const { lat, lon } = route.params.getPlayerPosition()
-	useEffect(() => { route.params.getUsersNearby(lat, lon).then(setUsers) }, [])
+
+	// TODO: add position to useEffect dependencies
+	useEffect(() => { CommunicationController.getUsersNearby(sid, lat, lon).then(setUsers) }, [])	// Calling setUsers triggers a re-render
 
 	return (
 		<View>
@@ -15,8 +20,7 @@ export default function UsersNearbyPage({ navigation, route }) {
 			<FlatList
 				data={users}
 				renderItem={({ item }) => <UsersListItem data={item} />}
-				keyExtractor={(item) => item.uid}
-			/>
+				keyExtractor={(item) => item.uid} />
 		</View>
 	)
 }

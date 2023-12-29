@@ -4,7 +4,7 @@ import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
 import { SIDContext } from './Contexts'
 
-export default function RankingPage({ navigation, route }) {
+export default function RankingPage({ navigation }) {
 
 	const { sid } = useContext(SIDContext)
 	const [ranking, setRanking] = useState([])
@@ -13,7 +13,7 @@ export default function RankingPage({ navigation, route }) {
 
 	return (
 		<View>
-			<Button title="< Back" onPress={() => navigation.goBack()} />
+			<Button title="< Back" onPress={navigation.goBack} />
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Top players</Text>
 			<FlatList
 				data={ranking}
