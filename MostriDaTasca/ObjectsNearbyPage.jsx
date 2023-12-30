@@ -2,12 +2,12 @@ import { useContext, useEffect, useState } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 
 import CommunicationController from './CommunicationController'
-import { LocationContext, SIDContext } from './Contexts'
+import { LocationContext, PlayerContext } from './Contexts'
 import ObjectsListItem from './ObjectsListItem'
 
 export default function ObjectsNearbyPage({ navigation }) {
 
-	const { sid } = useContext(SIDContext)
+	const { sid } = useContext(PlayerContext)
 	const { lat, lon } = useContext(LocationContext)
 	const [objects, setObjects] = useState([])
 

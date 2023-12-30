@@ -16,6 +16,7 @@ export default class CommunicationController {
 		let httpResponse
 		try {
 			httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData)
+			if (!httpResponse.ok) throw new Error(`HTTP error! status: ${httpResponse.status}`)
 		} catch (error) {
 			throw new Error("NETWORK ERROR: " + error.message)
 		}

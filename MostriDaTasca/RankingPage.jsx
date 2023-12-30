@@ -2,11 +2,11 @@ import { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
-import { SIDContext } from './Contexts'
+import { PlayerContext } from './Contexts'
 
 export default function RankingPage({ navigation }) {
 
-	const { sid } = useContext(SIDContext)
+	const { sid } = useContext(PlayerContext)
 	const [ranking, setRanking] = useState([])
 
 	useEffect(() => { CommunicationController.getRanking(sid).then(setRanking) }, [])	// Calling setRanking triggers a re-render 

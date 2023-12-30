@@ -4,14 +4,15 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
 // Contexts
-import { LocationContext, SIDContext } from './Contexts';
+import { LocationContext, PlayerContext, DatabseContext } from './Contexts';
 // React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // Location and maps
 import * as Location from 'expo-location';
 import MapView, { Circle, Marker } from 'react-native-maps';
-// SQLite
+// Local storage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SQLite from 'expo-sqlite';
 // My components and classes
 import CommunicationController from './CommunicationController';
@@ -32,23 +33,26 @@ export default class App extends React.Component {
 
 	state = {
 		sid: null,
-		currentPage: this.PAGES.REGISTRATION,
-		selectedObjectID: null,
-		selectedUserID: null,
-		// TODO: move to a User local data
-		playerUserID: null,
+		playerUID: null,
 		playerLat: 0.0,
 		playerLon: 0.0,
+		// selectedObjectID: null,
+		// selectedUID: null,
+		// currentPage: this.PAGES.REGISTRATION,
 	}
-	/*
-	componentDidMount() { this.checkUserRegistered() }
-	*/
+
+	async componentDidMount() {
+		// TODO: location permission request
+	}
+
 	render() {
 		return (
-			<SIDContext.Provider
+			<PlayerContext.Provider
 				value={{
 					sid: this.state.sid,
-					setSID: (sid) => this.setState({ sid: sid })
+					uid: this.state.playerUID,
+					setSID: (sid) => this.setState({ sid: sid }),
+					setUID: (uid) => this.setState({ playerUID: uid })
 				}}>
 				<LocationContext.Provider
 					value={{
@@ -57,21 +61,29 @@ export default class App extends React.Component {
 						setLat: (lat) => this.setState({ playerLat: lat }),
 						setLon: (lon) => this.setState({ playerLon: lon })
 					}}>
-					<NavigationContainer>
-						<Stack.Navigator initialRouteName='Registration'>
-							<Stack.Screen name="Registration" component={RegistrationPage} />
-							<Stack.Screen name="Main" component={MainPage} />
-							<Stack.Screen name="Settings" component={SettingsPage} />
-							<Stack.Screen name="Ranking" component={RankingPage} />
-							<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage} />
-							<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
-							<Stack.Screen name="UsersNearby" component={UsersNearbyPage} />
-							<Stack.Screen name="UserDetails" component={UserDetailsPage}
+					<DatabseContext.Provider
+						value={{
+							// TODO
+						}}>
+						<StatusBar style="auto" hidden={true} />
+						<NavigationContainer>
+							<Stack.Navigator
+								initialRouteName='Registration'
+								screenOptions={{ headerShown: false }}>
+								<Stack.Screen name="Registration" component={RegistrationPage} />
+								<Stack.Screen name="Main" component={MainPage} />
+								<Stack.Screen name="Settings" component={SettingsPage} />
+								<Stack.Screen name="Ranking" component={RankingPage} />
+								<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage} />
+								<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
+								<Stack.Screen name="UsersNearby" component={UsersNearbyPage} />
+								<Stack.Screen name="UserDetails" component={UserDetailsPage}
 						/* TODO */ />
-						</Stack.Navigator>
-					</NavigationContainer>
+							</Stack.Navigator>
+						</NavigationContainer>
+					</DatabseContext.Provider>
 				</LocationContext.Provider>
-			</SIDContext.Provider>
+			</PlayerContext.Provider>
 		)
 
 		/*
@@ -95,7 +107,7 @@ export default class App extends React.Component {
 					content = <SettingsPage
 						onPressGoBack={this.handleGoToMainPage}
 						onPressUpdateUser={this.handlePressUpdateUser}
-						uid={this.state.playerUserID} />
+						uid={this.state.playerUID} />
 					break
 
 					case this.PAGES.RANKING:
@@ -143,7 +155,7 @@ export default class App extends React.Component {
 	/*
 		checkUserRegistered = () => { if (this.state.sid == null) this.setState({currentPage: this.PAGES.REGISTRATION }) }
 		getPlayerPosition = () => { return {lat: this.state.playerLat, lon: this.state.playerLon } }
-					*/
+	*/
 	/////////////////////////
 	//// BUTTON HANDLERS ////
 	/////////////////////////
@@ -165,7 +177,7 @@ export default class App extends React.Component {
 	handlePressRegisterUser = async () => {
 						let {sid, uid} = await CommunicationController.registerUser()
 					console.log(sid, uid)
-					this.setState({sid: sid, playerUserID: uid, currentPage: this.PAGES.MAIN })
+					this.setState({sid: sid, playerUID: uid, currentPage: this.PAGES.MAIN })
 	}
 
 	handlePressObjectsNearby = async (lat, lon) => {
