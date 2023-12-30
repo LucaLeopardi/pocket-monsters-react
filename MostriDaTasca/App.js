@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
 // Contexts
-import { LocationContext, PlayerContext, DatabseContext } from './Contexts';
+import { LocationContext, PlayerContext, DatabaseContext } from './Contexts';
 // React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -24,6 +24,7 @@ import ObjectsNearbyPage from './ObjectsNearbyPage';
 import ObjectDetailsPage from './ObjectDetailsPage';
 import UsersNearbyPage from './UsersNearbyPage';
 import UserDetailsPage from './UserDetailsPage';
+import StorageManager from './StorageManager';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ export default class App extends React.Component {
 		playerUID: null,
 		playerLat: 0.0,
 		playerLon: 0.0,
+		localDB: null,
 		// selectedObjectID: null,
 		// selectedUID: null,
 		// currentPage: this.PAGES.REGISTRATION,
@@ -43,6 +45,8 @@ export default class App extends React.Component {
 
 	async componentDidMount() {
 		// TODO: location permission request
+
+		this.setState({ localDB: new StorageManager() })
 	}
 
 	render() {
@@ -61,9 +65,9 @@ export default class App extends React.Component {
 						setLat: (lat) => this.setState({ playerLat: lat }),
 						setLon: (lon) => this.setState({ playerLon: lon })
 					}}>
-					<DatabseContext.Provider
+					<DatabaseContext.Provider
 						value={{
-							// TODO
+							database: this.state.localDB
 						}}>
 						<StatusBar style="auto" hidden={true} />
 						<NavigationContainer>
@@ -78,10 +82,10 @@ export default class App extends React.Component {
 								<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
 								<Stack.Screen name="UsersNearby" component={UsersNearbyPage} />
 								<Stack.Screen name="UserDetails" component={UserDetailsPage}
-						/* TODO */ />
+						/* TODO: map */ />
 							</Stack.Navigator>
 						</NavigationContainer>
-					</DatabseContext.Provider>
+					</DatabaseContext.Provider>
 				</LocationContext.Provider>
 			</PlayerContext.Provider>
 		)

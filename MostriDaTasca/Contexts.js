@@ -4,4 +4,4 @@ export const PlayerContext = React.createContext()
 
 export const LocationContext = React.createContext()
 
-export const DatabseContext = React.createContext()
+export const DatabaseContext = React.createContext()

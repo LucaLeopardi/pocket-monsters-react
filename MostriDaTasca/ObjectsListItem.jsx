@@ -3,12 +3,12 @@ import { Text, Pressable } from "react-native";
 
 
 export default function ObjectsListItem({ data }) {
-
-	const navigation = useNavigation();
+	const navigation = useNavigation()
 
 	return (
-		<Pressable onPress={() => navigation.navigate("ObjectDetails", { id: data.id })}>
-			<Text style={{ fontSize: 20 }}>{data.id}</Text>
+		<Pressable onPress={() => navigation.navigate("ObjectDetails", { data })}>
+			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.name}</Text>
+			<Text style={{ fontSize: 16 }}>Level {data.level} {data.type}</Text>
 		</Pressable>
 	)
 }
