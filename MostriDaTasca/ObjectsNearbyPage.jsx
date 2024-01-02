@@ -22,12 +22,12 @@ export default function ObjectsNearbyPage({ navigation }) {
 
 	return (
 		<View>
-			<Button title="< Back" onPress={navigation.goBack} />
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Objects nearby</Text>
 			<FlatList
 				data={objects}
 				renderItem={({ item }) => <ObjectsListItem data={item} />}
 				keyExtractor={(item) => item.id} />
+			<Button title="v close v" onPress={navigation.goBack} />
 		</View>
 	)
 }

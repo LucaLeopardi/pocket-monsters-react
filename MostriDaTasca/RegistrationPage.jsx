@@ -10,7 +10,12 @@ export default function RegistrationPage({ navigation }) {
 	const [registrationEnabled, setRegistrationEnabled] = useState(false)	// Used to disable the Register button while checking local storage
 
 	useEffect(() => {
-		if (sid && uid) navigation.navigate("Main")	// Will trigger on re-render after SID and UID are set
+		if (sid && uid) {		// Will trigger on re-render after SID and UID are set
+			navigation.reset({	// To navigate to MainPage, preventing the user from going back to RegistrationPage
+				index: 0,
+				routes: [{ name: 'Main' }],
+			})
+		}
 		else checkAlreadyRegistered()				// Check local storage
 	}, [sid])										// Only SID in dependencies because it's set last
 
@@ -46,7 +51,7 @@ export default function RegistrationPage({ navigation }) {
 	return (
 		<View>
 			<Text style={{ fontSize: 30, fontWeight: 'bold' }}>Mostri da tasca</Text>
-			<Button disabled={registrationEnabled} title="Register" onPress={handlePressRegister} />
+			<Button disabled={!registrationEnabled} title="Register" onPress={handlePressRegister} />
 		</View>
 	)
 }

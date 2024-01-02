@@ -8,7 +8,12 @@ export default function MainPage({ navigation }) {
 
 	const checkLocationPermission = async () => {
 		const locationPermission = await Location.getForegroundPermissionsAsync()
-		if (locationPermission.status !== 'granted') navigation.navigate("ErrorPage", { message: "The app requires location permissions to function. Please grant it your App Settings and relaunch the application." })
+		if (locationPermission.status !== 'granted') {
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'Profile', params: { message: "The app requires location permissions to function. Please grant it your App Settings and relaunch the application." } }],
+			})
+		}
 	}
 
 	// Permission is granted at App startup. If it's not available now, an error page is shown.

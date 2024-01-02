@@ -20,13 +20,13 @@ export default function RankingPage({ navigation }) {
 		}, [])
 
 	return (
-		<View>
-			<Button title="< Back" onPress={navigation.goBack} />
+		<View style={{ flex: 1 }}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Top players</Text>
-			<FlatList
+			<FlatList style={{ flex: 1 }}
 				data={ranking}
 				renderItem={({ item }) => <UsersListItem data={item} />}
 				keyExtractor={(item) => item.uid} />
+			<Button title="v close v" onPress={navigation.goBack} />
 		</View>
 	)
 }
