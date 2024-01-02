@@ -18,11 +18,9 @@ export default class CommunicationController {
 			httpResponse = await fetch(this.BASE_URL + endpoint + "?" + queryParamsString, fetchData)
 			if (!httpResponse.ok) throw new Error(`HTTP error! status: ${httpResponse.status}`)
 		} catch (error) {
-			throw new Error("NETWORK ERROR: " + error.message)
+			throw new Error("SERVER ERROR: " + httpResponse.status + " - " + await httpResponse.text())
 		}
-		const status = httpResponse.status;
-		if (status == 200) return await httpResponse.json();
-		else throw new Error("SERVER ERROR: " + status + " - " + await httpResponse.text());
+		if (httpResponse.status == 200) return await httpResponse.json();
 	}
 
 	static async registerUser() { return await this.request("users", "POST", {}, {}) }

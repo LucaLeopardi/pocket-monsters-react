@@ -102,13 +102,13 @@ export default class StorageManager {
 		let query = { sql, args }
 		this.db.execAsync([query], false).then(results => this.checkResultsAndReturn(results))
 	}
-
-	async getAllUsers() {
-		let query = { sql: "SELECT * FROM Users", args: [] }
-		let results = await (this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results)))
-		return results[0].rows
-	}
-
+	/*
+		async getAllUsers() {
+			let query = { sql: "SELECT * FROM Users", args: [] }
+			let results = await (this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results)))
+			return results[0].rows
+		}
+	*/
 	async getUserByID(sid, uid, profileversion) {
 		let query = { sql: "SELECT * FROM Users WHERE uid = ?", args: [uid] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))
@@ -139,13 +139,13 @@ export default class StorageManager {
 		}
 		this.db.execAsync([query], false).then(results => this.checkResultsAndReturn(results))
 	}
-
-	async getAllObjects() {
-		let query = { sql: "SELECT * FROM Objects", args: [] }
-		let results = await (this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results)))
-		return results[0].rows
-	}
-
+	/*
+		async getAllObjects() {
+			let query = { sql: "SELECT * FROM Objects", args: [] }
+			let results = await (this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results)))
+			return results[0].rows
+		}
+	*/
 	async getObjectByID(sid, id) {
 		let query = { sql: "SELECT * FROM Objects WHERE id = ?", args: [id] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))

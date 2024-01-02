@@ -1,12 +1,12 @@
 import { View, Text, Button } from 'react-native'
 import CommunicationController from './CommunicationController'
 import { useContext, useEffect, useState } from 'react'
-import { PlayerContext } from './Contexts'
+import * as Context from './Contexts'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function RegistrationPage({ navigation }) {
 
-	const { sid, uid, setSID, setUID } = useContext(PlayerContext)
+	const { sid, uid, setSID, setUID } = useContext(Context.Player)
 	const [registrationEnabled, setRegistrationEnabled] = useState(false)	// Used to disable the Register button while checking local storage
 
 	useEffect(() => {

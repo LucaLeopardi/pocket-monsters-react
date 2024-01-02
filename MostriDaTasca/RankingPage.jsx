@@ -2,12 +2,12 @@ import { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
-import { DatabaseContext, PlayerContext } from './Contexts'
+import * as Context from './Contexts'
 
 export default function RankingPage({ navigation }) {
 
-	const { sid } = useContext(PlayerContext)
-	const { database } = useContext(DatabaseContext)
+	const { sid } = useContext(Context.Player)
+	const { database } = useContext(Context.Database)
 	const [ranking, setRanking] = useState([])
 
 	useEffect(

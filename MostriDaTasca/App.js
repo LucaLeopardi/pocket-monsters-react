@@ -1,21 +1,15 @@
 // Basic stuff
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 // Contexts
-import { LocationContext, PlayerContext, DatabaseContext } from './Contexts';
+import * as Context from './Contexts';
 // React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // Location and maps
 import * as Location from 'expo-location';
-import MapView, { Circle, Marker } from 'react-native-maps';
-// Local storage
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as SQLite from 'expo-sqlite';
 // My components and classes
-import CommunicationController from './CommunicationController';
 import RegistrationPage from './RegistrationPage';
 import MainPage from './MainPage';
 import SettingsPage from './SettingsPage';
@@ -46,46 +40,27 @@ export default class App extends React.Component {
 
 	render() {
 		return (
-			<PlayerContext.Provider
-				value={{
-					sid: this.state.sid,
-					uid: this.state.playerUID,
-					setSID: (sid) => this.setState({ sid: sid }),
-					setUID: (uid) => this.setState({ playerUID: uid })
-				}}>
-				<LocationContext.Provider
-					value={{
-						lat: this.state.playerLat,
-						lon: this.state.playerLon,
-						setLat: (lat) => this.setState({ playerLat: lat }),
-						setLon: (lon) => this.setState({ playerLon: lon })
-					}}>
-					<DatabaseContext.Provider
-						value={{
-							database: this.state.localDB
-						}}>
-						<StatusBar style="auto" hidden={true} />
-						<NavigationContainer>
-							<Stack.Navigator
-								initialRouteName='Registration'
-								screenOptions={{ headerShown: false }}>
-								<Stack.Screen name="Registration" component={RegistrationPage} />
-								<Stack.Screen name="Main" component={MainPage} options={{ animation: 'fade' }} />
-								<Stack.Screen name="Settings" component={SettingsPage} />
-								<Stack.Screen name="Ranking" component={RankingPage}
-									options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
-								<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage}
-									options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
-								<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
-								<Stack.Screen name="UsersNearby" component={UsersNearbyPage}
-									options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
-								<Stack.Screen name="UserDetails" component={UserDetailsPage} />
-								<Stack.Screen name="ErrorPage" component={ErrorPage} options={{ animation: 'none' }} />
-							</Stack.Navigator>
-						</NavigationContainer>
-					</DatabaseContext.Provider>
-				</LocationContext.Provider>
-			</PlayerContext.Provider>
+			<Context.Provider>
+				<StatusBar style="auto" hidden={true} />
+				<NavigationContainer>
+					<Stack.Navigator
+						initialRouteName='Registration'
+						screenOptions={{ headerShown: false }}>
+						<Stack.Screen name="Registration" component={RegistrationPage} />
+						<Stack.Screen name="Main" component={MainPage} options={{ animation: 'fade' }} />
+						<Stack.Screen name="Settings" component={SettingsPage} />
+						<Stack.Screen name="Ranking" component={RankingPage}
+							options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
+						<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage}
+							options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
+						<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
+						<Stack.Screen name="UsersNearby" component={UsersNearbyPage}
+							options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
+						<Stack.Screen name="UserDetails" component={UserDetailsPage} />
+						<Stack.Screen name="ErrorPage" component={ErrorPage} options={{ animation: 'none' }} />
+					</Stack.Navigator>
+				</NavigationContainer>
+			</Context.Provider>
 		)
 	}
 

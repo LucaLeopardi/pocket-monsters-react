@@ -1,7 +1,80 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import StorageManager from './StorageManager'
+import CommunicationController from './CommunicationController'
 
-export const PlayerContext = React.createContext()
+export const Player = React.createContext()
 
-export const LocationContext = React.createContext()
+export const PlayerProvider = ({ children }) => {
+	const [sid, setSID] = React.useState(null)
+	const [uid, setUID] = React.useState(null)
 
-export const DatabaseContext = React.createContext()
+	return (
+		<Player.Provider value={{ sid, uid, setSID, setUID }}>
+			{children}
+		</Player.Provider>
+	)
+}
+
+export const Location = React.createContext()
+
+export const LocationProvider = ({ children }) => {
+	const [lat, setLat] = React.useState(45.47)
+	const [lon, setLon] = React.useState(9.23)
+
+	return (
+		<Location.Provider value={{ lat, lon, setLat, setLon }}>
+			{children}
+		</Location.Provider>
+	)
+}
+
+export const NearbyEntities = React.createContext()
+
+export const NearbyEntitiesProvider = ({ children }) => {
+	const { sid, uid } = React.useContext(Player)
+	const { lat, lon } = React.useContext(Location)
+	const [nearbyUsers, setNearbyUsers] = React.useState([])
+	const [nearbyObjects, setNearbyObjects] = React.useState([])
+
+	useEffect(
+		() => {
+			if (sid == null) return		// To avoid sending requests at launch before user data is loaded or created
+
+			console.log("Getting users nearby...")
+			CommunicationController.getUsersNearby(sid, lat, lon).then(setNearbyUsers)
+			console.log("Getting objects nearby...")
+			CommunicationController.getObjectsNearby(sid, lat, lon).then(setNearbyObjects)
+		}, [lat, lon, sid])		// sid dependency to initialize at launch even if lat and lon are not immediately changed
+
+	return (
+		<NearbyEntities.Provider value={{ nearbyUsers, nearbyObjects, setNearbyUsers, setNearbyObjects }}>
+			{children}
+		</NearbyEntities.Provider>
+	)
+}
+
+export const Database = React.createContext()
+
+export const DatabaseProvider = ({ children }) => {
+	const [database, setDatabase] = React.useState(new StorageManager())
+
+	return (
+		<Database.Provider value={{ database }}>
+			{children}
+		</Database.Provider>
+	)
+}
+
+export const Provider = ({ children }) => {
+	return (
+		<PlayerProvider>
+			<LocationProvider>
+				<NearbyEntitiesProvider>
+					<DatabaseProvider>
+						{children}
+					</DatabaseProvider>
+				</NearbyEntitiesProvider>
+			</LocationProvider>
+		</PlayerProvider>
+	)
+}

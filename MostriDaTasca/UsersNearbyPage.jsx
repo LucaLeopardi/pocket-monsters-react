@@ -2,30 +2,26 @@ import { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
-import { PlayerContext, LocationContext, DatabaseContext } from './Contexts'
+import * as Context from './Contexts'
 
 export default function UsersNearbyPage({ navigation }) {
 
-	const { sid } = useContext(PlayerContext)
-	const { lat, lon } = useContext(LocationContext)
-	const { database } = useContext(DatabaseContext)
-	const [users, setUsers] = useState([])
+	const { sid, uid } = useContext(Context.Player)
+	const { database } = useContext(Context.Database)
+	const { nearbyUsers, setNearbyUsers } = useContext(Context.NearbyEntities)
+	const [nearbyUsersDetails, setNearbyUsersDetails] = useState([])
 
-	// TODO: add position to useEffect dependencies
 	useEffect(
 		() => {
-			console.log("Getting users nearby...")
-			CommunicationController.getUsersNearby(sid, lat, lon)
-				// For each user, get its details from the database
-				.then((nearbyUsers) => Promise.all(nearbyUsers.map((user) => database.getUserByID(sid, user.uid, user.profileversion))))
-				.then(setUsers)	// Calling setUsers triggers a re-render
-		}, [])
+			Promise.all(nearbyUsers.map((user) => database.getUserByID(sid, user.uid, user.profileversion)))
+				.then(setNearbyUsersDetails)	// Calling setNearbyUsersDetails triggers a re-render
+		}, [nearbyUsers])
 
 	return (
-		<View>
+		<View style={{ flex: 1 }}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Players nearby</Text>
-			<FlatList
-				data={users}
+			<FlatList style={{ flex: 1 }}
+				data={nearbyUsersDetails}
 				renderItem={({ item }) => <UsersListItem data={item} />}
 				keyExtractor={(item) => item.uid} />
 			<Button title="v close v" onPress={navigation.goBack} />

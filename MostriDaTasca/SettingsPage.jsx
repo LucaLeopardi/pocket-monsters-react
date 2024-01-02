@@ -1,12 +1,12 @@
 import { View, Text, Button } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
-import { PlayerContext, DatabaseContext } from './Contexts'
+import * as Context from './Contexts'
 import CommunicationController from './CommunicationController'
 
 export default function SettingsPage({ navigation }) {
 
-	const { sid, uid } = useContext(PlayerContext)
-	const { database } = useContext(DatabaseContext)
+	const { sid, uid } = useContext(Context.Player)
+	const { database } = useContext(Context.Database)
 	const [player, setPlayer] = useState()
 
 	useEffect(() => {
