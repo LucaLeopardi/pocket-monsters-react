@@ -12,13 +12,14 @@ export default function UsersNearbyPage({ navigation }) {
 	const [users, setUsers] = useState([])
 
 	// TODO: add position to useEffect dependencies
-	useEffect(() => {
-		console.log("Getting users nearby...")
-		CommunicationController.getUsersNearby(sid, lat, lon)
-			// For each user, get its details from the database
-			.then((nearbyUsers) => Promise.all(nearbyUsers.map((user) => database.getUserByID(sid, user.uid, user.profileversion))))
-			.then(setUsers)	// Calling setUsers triggers a re-render
-	}, [])
+	useEffect(
+		() => {
+			console.log("Getting users nearby...")
+			CommunicationController.getUsersNearby(sid, lat, lon)
+				// For each user, get its details from the database
+				.then((nearbyUsers) => Promise.all(nearbyUsers.map((user) => database.getUserByID(sid, user.uid, user.profileversion))))
+				.then(setUsers)	// Calling setUsers triggers a re-render
+		}, [])
 
 	return (
 		<View>

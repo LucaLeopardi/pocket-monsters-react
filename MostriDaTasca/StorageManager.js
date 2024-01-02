@@ -112,6 +112,7 @@ export default class StorageManager {
 	async getUserByID(sid, uid, profileversion) {
 		let query = { sql: "SELECT * FROM Users WHERE uid = ?", args: [uid] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))
+		console.log("Result from local DB: ", results[0].rows[0])
 		let user
 		if (results[0].rows.length != 0) {
 			user = results[0].rows[0]

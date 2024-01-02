@@ -2,14 +2,22 @@ import { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
-import { PlayerContext } from './Contexts'
+import { DatabaseContext, PlayerContext } from './Contexts'
 
 export default function RankingPage({ navigation }) {
 
 	const { sid } = useContext(PlayerContext)
+	const { database } = useContext(DatabaseContext)
 	const [ranking, setRanking] = useState([])
 
-	useEffect(() => { CommunicationController.getRanking(sid).then(setRanking) }, [])	// Calling setRanking triggers a re-render 
+	useEffect(
+		() => {
+			console.log("Getting ranking...")
+			CommunicationController.getRanking(sid)
+				// For each user, get its details
+				.then((ranking) => Promise.all(ranking.map((user) => database.getUserByID(sid, user.uid, user.profileversion))))
+				.then(setRanking)	// Calling setRanking triggers a re-render
+		}, [])
 
 	return (
 		<View>
