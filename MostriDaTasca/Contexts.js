@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import StorageManager from './StorageManager'
 import CommunicationController from './CommunicationController'
 
+
 export const Player = React.createContext()
 
 export const PlayerProvider = ({ children }) => {
@@ -15,11 +16,12 @@ export const PlayerProvider = ({ children }) => {
 	)
 }
 
+
 export const Location = React.createContext()
 
 export const LocationProvider = ({ children }) => {
-	const [lat, setLat] = React.useState(45.47)
-	const [lon, setLon] = React.useState(9.23)
+	const [lat, setLat] = React.useState(45.46)
+	const [lon, setLon] = React.useState(9.22)
 
 	return (
 		<Location.Provider value={{ lat, lon, setLat, setLon }}>
@@ -27,6 +29,7 @@ export const LocationProvider = ({ children }) => {
 		</Location.Provider>
 	)
 }
+
 
 export const NearbyEntities = React.createContext()
 
@@ -41,7 +44,9 @@ export const NearbyEntitiesProvider = ({ children }) => {
 			if (sid == null) return		// To avoid sending requests at launch before user data is loaded or created
 
 			console.log("Getting users nearby...")
-			CommunicationController.getUsersNearby(sid, lat, lon).then(setNearbyUsers)
+			CommunicationController.getUsersNearby(sid, lat, lon)
+				.then((res) => res.filter((user) => user.uid != uid))
+				.then(setNearbyUsers)
 			console.log("Getting objects nearby...")
 			CommunicationController.getObjectsNearby(sid, lat, lon).then(setNearbyObjects)
 		}, [lat, lon, sid])		// sid dependency to initialize at launch even if lat and lon are not immediately changed
@@ -52,6 +57,7 @@ export const NearbyEntitiesProvider = ({ children }) => {
 		</NearbyEntities.Provider>
 	)
 }
+
 
 export const Database = React.createContext()
 
@@ -64,6 +70,7 @@ export const DatabaseProvider = ({ children }) => {
 		</Database.Provider>
 	)
 }
+
 
 export const Provider = ({ children }) => {
 	return (
