@@ -36,11 +36,12 @@ export default function MainPage({ navigation }) {
 		}
 	}, [lat, lon])
 
+	// Construct player, objects and users markers
 	const playerMaker =
 		<Marker
 			coordinate={{ latitude: lat, longitude: lon }}
 			pinColor='yellow'
-		//image={}
+		// TODO: image={}
 		/>
 
 	const objectsMarkers = nearbyObjects.map((obj) =>

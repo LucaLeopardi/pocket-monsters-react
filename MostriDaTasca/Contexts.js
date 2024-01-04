@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import StorageManager from './StorageManager'
 import CommunicationController from './CommunicationController'
+import * as ExpoLocation from 'expo-location'
 
 
 export const Player = React.createContext()
@@ -22,6 +23,22 @@ export const Location = React.createContext()
 export const LocationProvider = ({ children }) => {
 	const [lat, setLat] = React.useState(45.46)
 	const [lon, setLon] = React.useState(9.22)
+
+	useEffect(() => {
+		let locationSubscription
+		ExpoLocation.watchPositionAsync(
+			// Position is updated every 5 seconds IF the user has moved at least 5 meters. This is ok as objects are stationary right now, and we only need to "discover" new, faraway objects. For full release, if objects can spawn anywhere a better solution would be to regularly update regardless of movement.
+			{ accuracy: ExpoLocation.Accuracy.High, timeInterval: 5000, distanceInterval: 5 },
+			(location) => {
+				console.log("Updating location...")
+				console.log(location.coords.latitude, " | ", location.coords.longitude)
+				setLat(location.coords.latitude)
+				setLon(location.coords.longitude)
+			})
+			.then((res) => locationSubscription = res)
+		// Cleanup function
+		return () => { if (locationSubscription) locationSubscription.remove() }
+	}, [])
 
 	return (
 		<Location.Provider value={{ lat, lon, setLat, setLon }}>
