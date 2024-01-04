@@ -23,6 +23,8 @@ export default function MainPage({ navigation }) {
 	const { nearbyObjects, setNearbyObjects } = useContext(Context.NearbyEntities)
 	const { nearbyUsers, setNearbyUsers } = useContext(Context.NearbyEntities)
 	const mapRef = useRef(null)
+	const defaultLatitudeDelta = 0.06	// Set by feel
+	const defaultLongitudeDelta = 0.02
 
 	// Update map region
 	useEffect(() => {
@@ -30,8 +32,8 @@ export default function MainPage({ navigation }) {
 			mapRef.current.animateToRegion({
 				latitude: lat,
 				longitude: lon,
-				latitudeDelta: 0.0922,
-				longitudeDelta: 0.0421,
+				latitudeDelta: defaultLatitudeDelta,
+				longitudeDelta: defaultLongitudeDelta,
 			}, 1000)
 		}
 	}, [lat, lon])
@@ -62,8 +64,9 @@ export default function MainPage({ navigation }) {
 		//image={}
 		/>)
 
+	// TODO: Button to center map on player
 	return (
-		<View>
+		<View style={{ flex: 1 }}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Mostri da tasca</Text>
 			<Button title="Settings" onPress={() => navigation.navigate("Settings")} />
 			<Button title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />
@@ -71,12 +74,12 @@ export default function MainPage({ navigation }) {
 			<Button title="Ranking" onPress={() => navigation.navigate("Ranking")} />
 			<MapView
 				ref={mapRef}
-				style={{ width: '100%', height: '100%' }}
+				style={{ flex: 1 }}
 				initialRegion={{
 					latitude: lat,
 					longitude: lon,
-					latitudeDelta: 0.0922,
-					longitudeDelta: 0.0421,
+					latitudeDelta: defaultLatitudeDelta,
+					longitudeDelta: defaultLongitudeDelta,
 				}}>
 				{usersMarkers}
 				{objectsMarkers}
