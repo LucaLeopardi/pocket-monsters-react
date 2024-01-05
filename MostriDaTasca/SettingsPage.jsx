@@ -1,7 +1,8 @@
-import { View, Text, Button, Image, TextInput } from 'react-native'
+import { View, Text, Button, Image, TextInput, TouchableOpacity } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
 import * as Context from './Contexts'
 import CommunicationController from './CommunicationController'
+import { launchImageLibrary } from 'react-native-image-picker'
 
 export default function SettingsPage({ navigation }) {
 
@@ -34,6 +35,21 @@ export default function SettingsPage({ navigation }) {
 			.then(loadPage)
 	}
 
+	const handleSelectImage = () => {
+		// TODO: Does not work. Library problem.
+		launchImageLibrary(
+			{ mediaType: 'photo', includeBase64: true },
+			(response) => {
+				if (response.errorMessage) {
+					console.log("Error selecting image: " + response.errorMessage)
+					return
+				} else {
+					if (response.assets[0].fileSize > 100 * 1024) alert("Warning: Image too big! Max size is 100 KB")
+					else setNewImage({ uri: 'data:image/png;base64' + response.assets[0].base64 })
+				}
+			})
+	}
+
 	// When player hasn't been loaded yet
 	if (!player) return (
 		<View>
@@ -50,12 +66,18 @@ export default function SettingsPage({ navigation }) {
 		<View>
 			<Button title="< Back" onPress={navigation.goBack} />
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Your profile</Text>
-			<TextInput
-				placeholder={"✏️ " + player.name}
-				maxLength={15}
-				style={{ fontSize: 36, fontWeight: 'bold' }}
-				onChangeText={(str) => setNewName(str)} />
-			<Image source={image} style={{ width: 200, height: 200 }} />
+			<View style={{ flexDirection: 'row' }}>
+				<Image source={require('./assets/edit_icon.png')} style={{ width: 50, height: 50 }} />
+				<TextInput
+					placeholder={player.name}
+					maxLength={15}
+					style={{ fontSize: 36, fontWeight: 'bold' }}
+					onChangeText={(str) => setNewName(str)} />
+			</View>
+			<TouchableOpacity onPress={() => handleSelectImage()} style={{ justifyContent: 'center', alignItems: 'center' }}>
+				<Image source={image} style={{ opacity: 0.5, width: 200, height: 200 }} />
+				<Image source={require('./assets/edit_icon.png')} style={{ position: 'absolute', width: 100, height: 100 }} />
+			</TouchableOpacity>
 			<Text>HP: {player.life} | XP: {player.experience}</Text>
 			<Button
 				title={(newSharePosition === true ? "Disable" : "Enable") + " position sharing"}
