@@ -7,6 +7,7 @@ import * as Context from './Contexts';
 export default function MainPage({ navigation }) {
 
 	// Location permission is granted at App startup. If it's not available now, an error page is shown.
+
 	const checkLocationPermission = async () => {
 		const locationPermission = await Location.getForegroundPermissionsAsync()
 		if (locationPermission.status !== 'granted') {
@@ -19,6 +20,7 @@ export default function MainPage({ navigation }) {
 
 	useEffect(() => { checkLocationPermission() }, [])
 
+
 	const { lat, lon } = useContext(Context.Location)
 	const { nearbyObjects, setNearbyObjects } = useContext(Context.NearbyEntities)
 	const { nearbyUsers, setNearbyUsers } = useContext(Context.NearbyEntities)
@@ -26,7 +28,9 @@ export default function MainPage({ navigation }) {
 	const defaultLatitudeDelta = 0.06	// Set by feel
 	const defaultLongitudeDelta = 0.02
 
+
 	// Update map region
+
 	useEffect(() => {
 		if (mapRef.current) {
 			mapRef.current.animateToRegion({
@@ -38,13 +42,23 @@ export default function MainPage({ navigation }) {
 		}
 	}, [lat, lon])
 
+
 	// Construct player, objects and users markers
-	const playerMaker =
-		<Marker
-			coordinate={{ latitude: lat, longitude: lon }}
-			pinColor='yellow'
-		// TODO: image={}
-		/>
+
+	const getObjectTypeIcon = (type) => {
+		switch (type) {
+			case "monster":
+				return require('./assets/monster_icon.png')
+			case "armor":
+				return require('./assets/armor_icon.png')
+			case "weapon":
+				return require('./assets/weapon_icon.png')
+			case "amulet":
+				return require('./assets/amulet_icon.png')
+			case "candy":
+				return require('./assets/candy_icon.png')
+		}
+	}
 
 	const objectsMarkers = nearbyObjects.map((obj) =>
 		<Marker
@@ -52,7 +66,7 @@ export default function MainPage({ navigation }) {
 			title={obj.type + " " + obj.id}
 			coordinate={{ latitude: obj.lat, longitude: obj.lon }}
 			pinColor='red'
-		//image={}
+			image={getObjectTypeIcon(obj.type)}
 		/>)
 
 	const usersMarkers = nearbyUsers.map((user) =>
@@ -61,8 +75,15 @@ export default function MainPage({ navigation }) {
 			title={"User " + user.uid}
 			coordinate={{ latitude: user.lat, longitude: user.lon }}
 			pinColor='blue'
-		//image={}
+			image={require('./assets/user_icon.png')}
 		/>)
+
+	const playerMaker =
+		<Marker
+			coordinate={{ latitude: lat, longitude: lon }}
+			pinColor='yellow'
+			image={require('./assets/player_icon.png')}
+		/>
 
 	// TODO: Button to center map on player
 	return (

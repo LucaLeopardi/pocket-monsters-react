@@ -9,9 +9,10 @@ export const Player = React.createContext()
 export const PlayerProvider = ({ children }) => {
 	const [sid, setSID] = React.useState(null)
 	const [uid, setUID] = React.useState(null)
+	const [profileVersion, setProfileVersion] = React.useState(0)	// Only used for Settings page
 
 	return (
-		<Player.Provider value={{ sid, uid, setSID, setUID }}>
+		<Player.Provider value={{ sid, uid, profileVersion, setSID, setUID, setProfileVersion }}>
 			{children}
 		</Player.Provider>
 	)

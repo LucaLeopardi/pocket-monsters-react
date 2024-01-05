@@ -25,17 +25,17 @@ export default class CommunicationController {
 
 	static async registerUser() { return await this.request("users", "POST", {}, {}) }
 
-	static async getObjectsNearby(sid, lat, lon) { return await this.request("objects", "GET", { sid, lat, lon }, {}); }
+	static async getObjectsNearby(sid, lat, lon) { return await this.request("objects", "GET", { sid, lat, lon }, {}) }
 
-	static async getObjectDetails(sid, id) { return await this.request("objects/" + id, "GET", { sid }, {}); }
+	static async getObjectDetails(sid, id) { return await this.request("objects/" + id, "GET", { sid }, {}) }
 
 	static async activateObject(sid, id) { return await this.request("objects/" + id + "/activate", "POST", {}, { sid }); }
 
-	static async getUsersNearby(sid, lat, lon) { return await this.request("users", "GET", { sid, lat, lon }, {}); }
+	static async getUsersNearby(sid, lat, lon) { return await this.request("users", "GET", { sid, lat, lon }, {}) }
 
-	static async getUserDetails(sid, uid) { return await this.request("users/" + uid, "GET", { sid }, {}); }
+	static async getUserDetails(sid, uid) { return await this.request("users/" + uid, "GET", { sid }, {}) }
 
-	static async updateUser(sid, uid, newName, newImage, newSharingPosition) { return await this.request("users/" + uid, "PATCH", {}, { sid: sid, name: newName, picture: newImage, positionshare: newSharingPosition }); }
+	static async updateUser(sid, uid, newName, newImage, newSharingPosition) { return await this.request("users/" + uid, "PATCH", {}, { sid: sid, name: newName, picture: newImage, positionshare: newSharingPosition }) }
 
-	static async getRanking(sid) { return await this.request("ranking", "GET", { sid }, {}); }
+	static async getRanking(sid) { return await this.request("ranking", "GET", { sid }, {}) }
 }

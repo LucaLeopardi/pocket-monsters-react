@@ -6,7 +6,7 @@ export default class StorageManager {
 	constructor() {
 		this.db = SQLite.openDatabase("local.db");
 
-		// !!! Tables fields names are hard-coded to be the same as the ones in the server, for easy isnertion and replacement
+		// !!! Tables fields names are hard-coded to be the same as the ones in the server, for easy insertion and replacement
 
 		let createUsersTableQuery = {
 			sql: "CREATE TABLE IF NOT EXISTS Users (\
@@ -90,7 +90,7 @@ export default class StorageManager {
 		}
 	*/
 
-	// !!! Replaces User data, deleting previous fields if not specified
+	// !!! Replaces User data, deleting previous fields if not specified in user object argument
 	async insertOrReplaceUser(user) {	// Takes an object to allow for named parameters
 
 		const { uid, name = null, lat = null, lon = null, time = null, life = null, experience = null, weapon = null, armor = null, amulet = null, picture = null, profileversion = null, positionshare = null } = user
@@ -112,7 +112,7 @@ export default class StorageManager {
 	async getUserByID(sid, uid, profileversion) {
 		let query = { sql: "SELECT * FROM Users WHERE uid = ?", args: [uid] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))
-		console.log("Result from local DB: ", results[0].rows[0])
+		console.log("Result from local DB:\n", results[0].rows[0])
 		let user
 		if (results[0].rows.length != 0) {
 			user = results[0].rows[0]
@@ -122,6 +122,7 @@ export default class StorageManager {
 
 		console.log("Up-to-date User not found in local DB, getting from server...")
 		user = await CommunicationController.getUserDetails(sid, uid)
+		console.log("Result from server:\n", user)
 		// INSERT to local DB is called, but the server's result is immediately returned for responsiveness
 		this.insertOrReplaceUser(user)
 		return user

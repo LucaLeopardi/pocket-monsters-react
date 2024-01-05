@@ -1,4 +1,4 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, Linking, Pressable } from 'react-native'
 import CommunicationController from './CommunicationController'
 import { useContext, useEffect, useState } from 'react'
 import * as Context from './Contexts'
@@ -10,14 +10,14 @@ export default function RegistrationPage({ navigation }) {
 	const [registrationEnabled, setRegistrationEnabled] = useState(false)	// Used to disable the Register button while checking local storage
 
 	useEffect(() => {
-		if (sid && uid) {		// Will trigger on re-render after SID and UID are set
-			navigation.reset({	// To navigate to MainPage, preventing the user from going back to RegistrationPage
+		if (sid && uid) {				// Will trigger on re-render after SID and UID are set
+			navigation.reset({			// To navigate to MainPage and prevent the user from going back to RegistrationPage
 				index: 0,
 				routes: [{ name: 'Main' }],
 			})
 		}
-		else checkAlreadyRegistered()				// Check local storage
-	}, [sid])										// Only SID in dependencies because it's set last
+		else checkAlreadyRegistered()	// Check local storage
+	}, [sid])							// Only SID in dependencies because it's set last
 
 	const checkAlreadyRegistered = async () => {
 		try {
@@ -52,6 +52,9 @@ export default function RegistrationPage({ navigation }) {
 		<View>
 			<Text style={{ fontSize: 30, fontWeight: 'bold' }}>Mostri da tasca</Text>
 			<Button disabled={!registrationEnabled} title="Register" onPress={handlePressRegister} />
+			<Pressable onPress={() => Linking.openURL("https://icons8.com/")}>
+				<Text>Icons by icons8</Text>
+			</Pressable>
 		</View>
 	)
 }
