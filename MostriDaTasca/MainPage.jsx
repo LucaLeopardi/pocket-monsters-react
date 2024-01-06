@@ -1,11 +1,16 @@
-import { useContext, useEffect, useRef } from 'react'
-import { View, Text } from 'react-native'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { View, Text, Modal } from 'react-native'
 import * as Location from 'expo-location';
 import MapView, { Circle, Marker } from 'react-native-maps';
 import * as Context from './Contexts';
 import { MarkerObject, MarkerPlayer, MarkerUser, StyledButton, styles } from './CustomComponents';
+import { StatusBar } from 'expo-status-bar';
 
-export default function MainPage({ navigation }) {
+export default function MainPage({ navigation, route }) {
+
+	// !!! Passing params while navigating to MainPage will show a modal with the message
+	const { showPopUp, popUpMessage } = route.params ? route.params : { showPopUp: false, popUpMessage: null }
+	const [shouldPopUpShow, setShouldPopUpShow] = useState(showPopUp)
 
 	// Location permission is granted at App startup. If it's not available now, an error page is shown.
 	useEffect(() => { checkLocationPermission() }, [])
@@ -49,6 +54,18 @@ export default function MainPage({ navigation }) {
 	// TODO: Button to center map on player
 	return (
 		<View style={{ flex: 1 }}>
+			{/* Pop-up window, shown after object interaction */}
+			{/* TODO: Fix StatusBar becoming visible when the Modal is. EDIT: Apparently it's an unresolved issue. */}
+			<Modal visible={shouldPopUpShow} animationType='fade' transparent={true}>
+				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
+				<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+					<View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+						<Text>{popUpMessage}</Text>
+						<StyledButton title="OK" onPress={() => setShouldPopUpShow(false)} />
+					</View>
+				</View>
+			</Modal>
+
 			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
 			<StyledButton title="Settings" onPress={() => navigation.navigate("Settings")} />
 			<StyledButton title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />

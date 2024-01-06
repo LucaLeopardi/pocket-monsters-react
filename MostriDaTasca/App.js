@@ -24,7 +24,7 @@ export default function App() {
 
 	return (
 		<Context.Provider>
-			<StatusBar style="auto" hidden={true} />
+			<StatusBar hidden={true} />
 			<NavigationContainer>
 				<Stack.Navigator
 					initialRouteName='Initial'

@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useContext } from 'react';
 import * as Context from './Contexts';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Callout, Marker } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 
 export const StyledButton = ({ title, onPress }) =>
@@ -90,7 +90,7 @@ export const styles = StyleSheet.create({
 		margin: 2,
 		padding: 10,
 		borderRadius: 5,
-		alignSelf: 'flex-start',
+		alignSelf: 'center',
 	},
 	buttonText: {
 		color: `white`,
