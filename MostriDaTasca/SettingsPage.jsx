@@ -4,7 +4,7 @@ import * as Context from './Contexts'
 import CommunicationController from './CommunicationController'
 import { launchImageLibrary } from 'react-native-image-picker'
 
-export default function SettingsPage({ navigation }) {
+export default function SettingsPage({ navigation, route }) {
 
 	const { sid, uid } = useContext(Context.Player)
 	const { profileVersion, setProfileVersion } = useContext(Context.Player)
@@ -32,7 +32,7 @@ export default function SettingsPage({ navigation }) {
 				database.insertOrReplaceUser(usr)											// on local database
 				setProfileVersion(usr.profileversion)
 			})
-			.then(loadPage)
+			.then(navigation.navigate('Main'))
 	}
 
 	const handleSelectImage = () => {
@@ -64,7 +64,7 @@ export default function SettingsPage({ navigation }) {
 
 	return (
 		<View>
-			<Button title="< Back" onPress={navigation.goBack} />
+			{route.params?.firstAccess !== true && (<Button title="< Back" onPress={navigation.goBack} />)}
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Your profile</Text>
 			<View style={{ flexDirection: 'row' }}>
 				<Image source={require('./assets/edit_icon.png')} style={{ width: 50, height: 50 }} />

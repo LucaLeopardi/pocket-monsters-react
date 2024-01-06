@@ -24,8 +24,11 @@ export const Location = React.createContext()
 export const LocationProvider = ({ children }) => {
 	const [lat, setLat] = React.useState(45.46)
 	const [lon, setLon] = React.useState(9.22)
+	const [locationPermission, setLocationPermission] = React.useState()
 
 	useEffect(() => {
+		if (locationPermission !== 'granted') return
+
 		let locationSubscription
 		ExpoLocation.watchPositionAsync(
 			// Position is updated every 3 seconds IF the user has moved at least 5 meters. This is ok as objects are stationary right now, and we only need to "discover" new, faraway objects. For full release, if objects can spawn anywhere a better solution would be to regularly update regardless of movement.
@@ -39,10 +42,10 @@ export const LocationProvider = ({ children }) => {
 			.then((res) => locationSubscription = res)
 		// Cleanup function
 		return () => { if (locationSubscription) locationSubscription.remove() }
-	}, [])
+	}, [locationPermission])
 
 	return (
-		<Location.Provider value={{ lat, lon, setLat, setLon }}>
+		<Location.Provider value={{ lat, lon, locationPermission, setLat, setLon, setLocationPermission }}>
 			{children}
 		</Location.Provider>
 	)

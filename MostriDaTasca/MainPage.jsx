@@ -1,8 +1,9 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text } from 'react-native'
 import * as Location from 'expo-location';
 import MapView, { Circle, Marker } from 'react-native-maps';
 import * as Context from './Contexts';
+import { StyledButton } from './CustomComponents';
 
 export default function MainPage({ navigation }) {
 
@@ -18,7 +19,7 @@ export default function MainPage({ navigation }) {
 		}
 	}
 
-	useEffect(() => { checkLocationPermission() }, [])
+	//useEffect(async () => { await checkLocationPermission() }, [])
 
 
 	const { lat, lon } = useContext(Context.Location)
@@ -85,14 +86,15 @@ export default function MainPage({ navigation }) {
 			image={require('./assets/player_icon.png')}
 		/>
 
+	// TODO: Change Button to stylable custom component
 	// TODO: Button to center map on player
 	return (
 		<View style={{ flex: 1 }}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Mostri da tasca</Text>
-			<Button title="Settings" onPress={() => navigation.navigate("Settings")} />
-			<Button title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />
-			<Button title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
-			<Button title="Ranking" onPress={() => navigation.navigate("Ranking")} />
+			<StyledButton title="Settings" onPress={() => navigation.navigate("Settings")} />
+			<StyledButton title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />
+			<StyledButton title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
+			<StyledButton title="Ranking" onPress={() => navigation.navigate("Ranking")} />
 			<MapView
 				ref={mapRef}
 				style={{ flex: 1 }}
