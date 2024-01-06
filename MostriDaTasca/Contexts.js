@@ -6,7 +6,7 @@ import * as ExpoLocation from 'expo-location'
 
 export const Player = React.createContext()
 
-export const PlayerProvider = ({ children }) => {
+const PlayerProvider = ({ children }) => {
 	const [sid, setSID] = React.useState(null)
 	const [uid, setUID] = React.useState(null)
 	const [profileVersion, setProfileVersion] = React.useState(0)	// Only used for Settings page
@@ -21,7 +21,7 @@ export const PlayerProvider = ({ children }) => {
 
 export const Location = React.createContext()
 
-export const LocationProvider = ({ children }) => {
+const LocationProvider = ({ children }) => {
 	const [lat, setLat] = React.useState(45.46)
 	const [lon, setLon] = React.useState(9.22)
 	const [locationPermission, setLocationPermission] = React.useState()
@@ -54,7 +54,7 @@ export const LocationProvider = ({ children }) => {
 
 export const NearbyEntities = React.createContext()
 
-export const NearbyEntitiesProvider = ({ children }) => {
+const NearbyEntitiesProvider = ({ children }) => {
 	const { sid, uid } = React.useContext(Player)
 	const { lat, lon } = React.useContext(Location)
 	const [nearbyUsers, setNearbyUsers] = React.useState([])
@@ -82,7 +82,7 @@ export const NearbyEntitiesProvider = ({ children }) => {
 
 export const Database = React.createContext()
 
-export const DatabaseProvider = ({ children }) => {
+const DatabaseProvider = ({ children }) => {
 	const [database, setDatabase] = React.useState(new StorageManager())
 
 	return (

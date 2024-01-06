@@ -1,13 +1,14 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { View, Text } from 'react-native'
 import * as Location from 'expo-location';
 import MapView, { Circle, Marker } from 'react-native-maps';
 import * as Context from './Contexts';
-import { StyledButton } from './CustomComponents';
+import { MarkerObject, MarkerPlayer, MarkerUser, StyledButton, styles } from './CustomComponents';
 
 export default function MainPage({ navigation }) {
 
 	// Location permission is granted at App startup. If it's not available now, an error page is shown.
+	useEffect(() => { checkLocationPermission() }, [])
 
 	const checkLocationPermission = async () => {
 		const locationPermission = await Location.getForegroundPermissionsAsync()
@@ -19,9 +20,6 @@ export default function MainPage({ navigation }) {
 		}
 	}
 
-	//useEffect(async () => { await checkLocationPermission() }, [])
-
-
 	const { lat, lon } = useContext(Context.Location)
 	const { nearbyObjects, setNearbyObjects } = useContext(Context.NearbyEntities)
 	const { nearbyUsers, setNearbyUsers } = useContext(Context.NearbyEntities)
@@ -29,9 +27,7 @@ export default function MainPage({ navigation }) {
 	const defaultLatitudeDelta = 0.06	// Set by feel
 	const defaultLongitudeDelta = 0.02
 
-
 	// Update map region
-
 	useEffect(() => {
 		if (mapRef.current) {
 			mapRef.current.animateToRegion({
@@ -44,53 +40,16 @@ export default function MainPage({ navigation }) {
 	}, [lat, lon])
 
 
-	// Construct player, objects and users markers
-
-	const getObjectTypeIcon = (type) => {
-		switch (type) {
-			case "monster":
-				return require('./assets/monster_icon.png')
-			case "armor":
-				return require('./assets/armor_icon.png')
-			case "weapon":
-				return require('./assets/weapon_icon.png')
-			case "amulet":
-				return require('./assets/amulet_icon.png')
-			case "candy":
-				return require('./assets/candy_icon.png')
-		}
-	}
-
-	const objectsMarkers = nearbyObjects.map((obj) =>
-		<Marker
-			key={obj.id}
-			title={obj.type + " " + obj.id}
-			coordinate={{ latitude: obj.lat, longitude: obj.lon }}
-			pinColor='red'
-			image={getObjectTypeIcon(obj.type)}
-		/>)
-
-	const usersMarkers = nearbyUsers.map((user) =>
-		<Marker
-			key={user.uid}
-			title={"User " + user.uid}
-			coordinate={{ latitude: user.lat, longitude: user.lon }}
-			pinColor='blue'
-			image={require('./assets/user_icon.png')}
-		/>)
-
-	const playerMaker =
-		<Marker
-			coordinate={{ latitude: lat, longitude: lon }}
-			pinColor='yellow'
-			image={require('./assets/player_icon.png')}
-		/>
+	// Construct map markers
+	const objectsMarkers = nearbyObjects.map((obj) => <MarkerObject object={obj} key={obj.id} />)
+	const usersMarkers = nearbyUsers.map((user) => <MarkerUser user={user} key={user.uid} />)
+	const playerMaker = <MarkerPlayer lat={lat} lon={lon} />
 
 	// TODO: Change Button to stylable custom component
 	// TODO: Button to center map on player
 	return (
 		<View style={{ flex: 1 }}>
-			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Mostri da tasca</Text>
+			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
 			<StyledButton title="Settings" onPress={() => navigation.navigate("Settings")} />
 			<StyledButton title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />
 			<StyledButton title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
@@ -98,6 +57,8 @@ export default function MainPage({ navigation }) {
 			<MapView
 				ref={mapRef}
 				style={{ flex: 1 }}
+				customMapStyle={styles.map}
+				toolbarEnabled={false}
 				initialRegion={{
 					latitude: lat,
 					longitude: lon,

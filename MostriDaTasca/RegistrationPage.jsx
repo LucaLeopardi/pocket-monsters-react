@@ -1,12 +1,12 @@
-import { View, Text, Button, Linking, Pressable } from 'react-native'
+import { View, Text, Button, Linking, Pressable, Image } from 'react-native'
 import CommunicationController from './CommunicationController'
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import * as Context from './Contexts'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function RegistrationPage({ navigation }) {
 
-	const { sid, uid, setSID, setUID } = useContext(Context.Player)
+	const { setSID, setUID } = useContext(Context.Player)
 
 	const handlePressRegister = async () => {
 		const { sid: newSid, uid: newUid } = await CommunicationController.registerUser()
@@ -21,6 +21,7 @@ export default function RegistrationPage({ navigation }) {
 		setUID(newUid)
 		setSID(newSid)
 
+		console.log("Navigating from Registration to Settings...")
 		navigation.reset({
 			index: 0,
 			routes: [{ name: 'Settings', params: { firstAccess: true } }]
@@ -29,8 +30,12 @@ export default function RegistrationPage({ navigation }) {
 
 	return (
 		<View>
-			<Text style={{ fontSize: 30, fontWeight: 'bold' }}>Mostri da tasca</Text>
-			<Button title="Register" onPress={handlePressRegister} />
+			<Text style={{ fontSize: 50, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
+			<Image source={require('./assets/app_icon.png')} style={{ width: 100, height: 100 }} />
+			<Button title="Sign up" onPress={handlePressRegister} />
+			<Pressable onPress={() => Linking.openURL("https://icons8.com/")}>
+				<Text>Icons by icons8</Text>
+			</Pressable>
 		</View>
 	)
 }

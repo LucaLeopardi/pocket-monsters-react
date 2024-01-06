@@ -1,4 +1,4 @@
-import { View, Text, Button, Image, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, Button, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
 import * as Context from './Contexts'
 import CommunicationController from './CommunicationController'
@@ -21,7 +21,6 @@ export default function SettingsPage({ navigation, route }) {
 	}
 
 	useEffect(() => loadPage(), [])
-
 	useEffect(() => { if (player) setNewSharePosition(player.positionshare) }, [player])
 
 	const handleUpdateUser = async (sid, uid, newName, newImage, newSharePosition) => {
@@ -32,7 +31,10 @@ export default function SettingsPage({ navigation, route }) {
 				database.insertOrReplaceUser(usr)											// on local database
 				setProfileVersion(usr.profileversion)
 			})
-			.then(navigation.navigate('Main'))
+			.then(navigation.reset({
+				index: 0,
+				routes: [{ name: 'Main' }]
+			}))
 	}
 
 	const handleSelectImage = () => {
@@ -54,7 +56,7 @@ export default function SettingsPage({ navigation, route }) {
 	if (!player) return (
 		<View>
 			<Button title="< Back" onPress={navigation.goBack} />
-			<Text>Loading...</Text>
+			<ActivityIndicator size='large' color='#0000ff' />
 		</View>
 	)
 

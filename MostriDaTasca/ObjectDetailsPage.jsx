@@ -4,6 +4,10 @@ export default function ObjectDetailsPage({ navigation, route }) {
 
 	const { data, image } = route.params
 
+	// TODO: Interact with object
+
+	// TODO: Description based on type
+
 	return (
 		<View>
 			<Button title="< Back" onPress={navigation.goBack} />
