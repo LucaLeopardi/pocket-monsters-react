@@ -5,13 +5,17 @@ import { StyleSheet, Text, TouchableOpacity, Image, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 
 
-export const StyledButton = ({ title, image, onPress }) =>
-	<TouchableOpacity onPress={onPress} style={styles.button}>
+export const StyledButton = ({ title = null, image = null, onPress = null, disabled = false }) =>
+	<TouchableOpacity onPress={onPress} style={[styles.button, { opacity: disabled ? 0.4 : 1 }]} disabled={disabled} >
 		<View>
 			{title ? <Text style={styles.buttonText}>{title}</Text> : null}
 			{image ? <Image source={image} /> : null}
 		</View>
-	</TouchableOpacity>
+	</TouchableOpacity >
+
+export const SettingsContent = (profile) => {
+
+}
 
 
 // MAP MARKERS //

@@ -23,10 +23,9 @@ export default function InitialPage({ navigation }) {
 					index: 0,
 					routes: [{ name: 'ErrorPage', params: { message: "The app requires location permissions to function. Please grant it your App Settings and relaunch the application." } }],
 				})
-			} else {
-				updateLocation({ permission: result.status })
 			}
 		}
+		updateLocation({ permission: result.status })
 	}
 
 	const checkAlreadyRegistered = async () => {

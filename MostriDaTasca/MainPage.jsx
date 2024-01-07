@@ -65,7 +65,7 @@ export default function MainPage({ navigation, route }) {
 			</Modal>
 
 			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
-			<StyledButton title="Settings" onPress={() => navigation.navigate("Settings")} />
+			<StyledButton image={require('./assets/settings_icon.png')} onPress={() => navigation.navigate("Settings")} />
 			<StyledButton title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />
 			<StyledButton title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
 			<StyledButton title="Ranking" onPress={() => navigation.navigate("Ranking")} />

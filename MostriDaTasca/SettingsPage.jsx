@@ -80,8 +80,9 @@ export default function SettingsPage({ navigation, route }) {
 				<Image source={require('./assets/edit_icon.png')} style={{ position: 'absolute', width: 100, height: 100 }} />
 			</TouchableOpacity>
 			<Text>HP: {profile.life} | XP: {profile.experience}</Text>
+			<Text>Position sharing: {newProfile.sharePosition ? "ON" : "OFF"}</Text>
 			<StyledButton
-				title={(newProfile.sharePosition === true ? "Disable" : "Enable") + " position sharing"}
+				title={(newProfile.sharePosition === true ? "Disable" : "Enable")}
 				onPress={() => updateNewProfile({ sharePosition: !newProfile.sharePosition })} />
 			<StyledButton
 				title="Confirm"

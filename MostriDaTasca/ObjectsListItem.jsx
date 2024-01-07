@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Text, Pressable, Image } from "react-native";
+import { Text, Pressable, Image, View } from "react-native";
 
 
 export default function ObjectsListItem({ data }) {
@@ -28,9 +28,11 @@ export default function ObjectsListItem({ data }) {
 
 	return (
 		<Pressable onPress={() => navigation.navigate("ObjectDetails", { data, image })}>
-			<Image source={image} style={{ width: 50, height: 50 }} />
-			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.name}</Text>
-			<Text style={{ fontSize: 16 }}>Level {data.level} {data.type}</Text>
+			<View style={{ opacity: data.withinRange ? 1 : 0.5 }}>
+				<Image source={image} style={{ width: 50, height: 50 }} />
+				<Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.name}</Text>
+				<Text style={{ fontSize: 16 }}>Level {data.level} {data.type}</Text>
+			</View>
 		</Pressable>
 	)
 }
