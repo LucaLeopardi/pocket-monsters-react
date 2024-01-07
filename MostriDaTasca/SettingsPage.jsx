@@ -1,8 +1,9 @@
-import { View, Text, Button, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
 import * as Context from './Contexts'
 import CommunicationController from './CommunicationController'
 import { launchImageLibrary } from 'react-native-image-picker'
+import { StyledButton } from './CustomComponents'
 
 export default function SettingsPage({ navigation, route }) {
 
@@ -52,7 +53,7 @@ export default function SettingsPage({ navigation, route }) {
 	// When player hasn't been loaded yet
 	if (!profile) return (
 		<View>
-			<Button title="< Back" onPress={navigation.goBack} />
+			<StyledButton title="< Back" onPress={navigation.goBack} />
 			<ActivityIndicator size='large' color='#0000ff' />
 		</View>
 	)
@@ -64,7 +65,7 @@ export default function SettingsPage({ navigation, route }) {
 	return (
 		<View>
 			{/* "Back" button is not rendered it firstAccess is passed as route param */}
-			{route.params?.firstAccess !== true && (<Button title="< Back" onPress={navigation.goBack} />)}
+			{route.params?.firstAccess !== true && (<StyledButton title="< Back" onPress={navigation.goBack} />)}
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Your profile</Text>
 			<View style={{ flexDirection: 'row' }}>
 				<Image source={require('./assets/edit_icon.png')} style={{ width: 50, height: 50 }} />
@@ -79,10 +80,10 @@ export default function SettingsPage({ navigation, route }) {
 				<Image source={require('./assets/edit_icon.png')} style={{ position: 'absolute', width: 100, height: 100 }} />
 			</TouchableOpacity>
 			<Text>HP: {profile.life} | XP: {profile.experience}</Text>
-			<Button
+			<StyledButton
 				title={(newProfile.sharePosition === true ? "Disable" : "Enable") + " position sharing"}
 				onPress={() => updateNewProfile({ sharePosition: !newProfile.sharePosition })} />
-			<Button
+			<StyledButton
 				title="Confirm"
 				disabled={shouldConfirmBeDisabled()}
 				onPress={() => handleUpdateUser(sid, uid, newProfile)} />

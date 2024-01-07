@@ -12,9 +12,9 @@ const PlayerProvider = ({ children }) => {
 		sid: null,
 		uid: null,
 		profileVersion: 0,
-		weaponLevel: 0,
-		armorLevel: 0,
-		amuletLevel: 0,
+		weaponLevel: 0,		// Used for client side damage prediction
+		armorLevel: 0,		// Currently unused
+		amuletLevel: 0,		// Used for client side interaction range calculation
 	})
 	const updatePlayer = (newProperties) => setPlayer((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
@@ -39,7 +39,10 @@ const LocationProvider = ({ children }) => {
 	const updateLocation = (newProperties) => setLocation((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
 	useEffect(() => {
-		if (location.permission !== 'granted') return
+		if (location.permission !== 'granted') {
+			console.log("No location permission")
+			return
+		}
 
 		let locationSubscription
 		ExpoLocation.watchPositionAsync(

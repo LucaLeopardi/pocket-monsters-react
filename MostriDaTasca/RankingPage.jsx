@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
 import * as Context from './Contexts'
+import { StyledButton } from './CustomComponents'
 
 export default function RankingPage({ navigation }) {
 
@@ -28,7 +29,7 @@ export default function RankingPage({ navigation }) {
 				data={ranking}
 				renderItem={({ item }) => <UsersListItem data={item} />}
 				keyExtractor={(item) => item.uid} />
-			<Button title="v close v" onPress={navigation.goBack} />
+			<StyledButton title="v close v" onPress={navigation.goBack} />
 		</View>
 	)
 }

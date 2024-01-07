@@ -24,14 +24,17 @@ export default function MainPage({ navigation, route }) {
 		}
 	}
 
+	const { player: { amuletLevel } } = useContext(Context.Player)
 	const { location: { lat, lon } } = useContext(Context.Location)
 	const { nearbyObjects, nearbyUsers } = useContext(Context.NearbyEntities)
 	const mapRef = useRef(null)
-	const defaultLatitudeDelta = 0.06	// Set by feel
-	const defaultLongitudeDelta = 0.02
+	const defaultLatitudeDelta = 0.005	// Set purely by feel
+	const defaultLongitudeDelta = 0.002
 
 	// Update map region
-	useEffect(() => {
+	useEffect(() => { centerMapToRegion(lat, lon) }, [lat, lon])
+
+	const centerMapToRegion = (lat, lon) => {
 		if (mapRef.current) {
 			mapRef.current.animateToRegion({
 				latitude: lat,
@@ -40,17 +43,13 @@ export default function MainPage({ navigation, route }) {
 				longitudeDelta: defaultLongitudeDelta,
 			}, 1000)
 		}
-	}, [lat, lon])
-
+	}
 
 	// Construct map markers
 	const objectsMarkers = nearbyObjects.map((obj) => <MarkerObject object={obj} key={obj.id} />)
 	const usersMarkers = nearbyUsers.map((user) => <MarkerUser user={user} key={user.uid} />)
 	const playerMaker = <MarkerPlayer lat={lat} lon={lon} />
 
-	// TODO: Change Button to stylable custom component
-	// TODO: Button to center map on player
-	// TODO: Circle to show player interaction range
 	return (
 		<View style={{ flex: 1 }}>
 			{/* Pop-up window, shown after object interaction */}
@@ -81,10 +80,12 @@ export default function MainPage({ navigation, route }) {
 					latitudeDelta: defaultLatitudeDelta,
 					longitudeDelta: defaultLongitudeDelta,
 				}}>
+				<Circle center={{ latitude: lat, longitude: lon }} radius={100 + amuletLevel} fillColor='#E8D04A30' strokeWidth={0} />
 				{usersMarkers}
 				{objectsMarkers}
 				{playerMaker}
 			</MapView>
+			<StyledButton image={require('./assets/position_icon.png')} onPress={() => centerMapToRegion(lat, lon)} />
 		</View>
 	)
 }

@@ -1,14 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import { useContext } from 'react';
 import * as Context from './Contexts';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Image, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 
 
-export const StyledButton = ({ title, onPress }) =>
-	// TODO: Change to TouchableHighlight?
+export const StyledButton = ({ title, image, onPress }) =>
 	<TouchableOpacity onPress={onPress} style={styles.button}>
-		<Text style={styles.buttonText}>{title}</Text>
+		<View>
+			{title ? <Text style={styles.buttonText}>{title}</Text> : null}
+			{image ? <Image source={image} /> : null}
+		</View>
 	</TouchableOpacity>
 
 
@@ -19,6 +21,8 @@ export function MarkerPlayer({ lat, lon }) {
 		< Marker
 			coordinate={{ latitude: lat, longitude: lon }}
 			image={require('./assets/player_icon.png')}
+			flat={true}
+			anchor={{ x: 0.5, y: 0.5 }}
 		/>)
 }
 
@@ -33,6 +37,8 @@ export function MarkerUser({ user }) {
 			key={user.uid}
 			image={image}
 			coordinate={{ latitude: user.lat, longitude: user.lon }}
+			flat={true}
+			anchor={{ x: 0.5, y: 0.5 }}
 			onPress={async () => {
 				const data = await database.getUserByID(sid, user.uid, user.profileversion)
 				if (data.picture) image = { uri: 'data:image/png;base64,' + data.picture }
@@ -50,8 +56,10 @@ export function MarkerObject({ object }) {
 	return (
 		<Marker
 			key={object.id}
-			image={image}
 			coordinate={{ latitude: object.lat, longitude: object.lon }}
+			image={image}
+			flat={true}
+			anchor={{ x: 0.5, y: 0.5 }}
 			onPress={async () => {
 				const data = await database.getObjectByID(sid, object.id)
 				if (data.image) image = { uri: 'data:image/png;base64,' + data.image }
