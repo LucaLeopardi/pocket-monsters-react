@@ -6,7 +6,7 @@ import * as Context from './Contexts'
 
 export default function RankingPage({ navigation }) {
 
-	const { sid } = useContext(Context.Player)
+	const { player: { sid } } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
 	const [ranking, setRanking] = useState([])
 

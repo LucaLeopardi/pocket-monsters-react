@@ -6,9 +6,9 @@ import ObjectsListItem from './ObjectsListItem'
 
 export default function ObjectsNearbyPage({ navigation }) {
 
-	const { sid, uid } = useContext(Context.Player)
+	const { player: { sid } } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
-	const { nearbyObjects, setNearbyObjects } = useContext(Context.NearbyEntities)
+	const { nearbyObjects } = useContext(Context.NearbyEntities)
 	const [nearbyObjectsDetails, setNearbyObjectsDetails] = useState([])
 
 	useEffect(

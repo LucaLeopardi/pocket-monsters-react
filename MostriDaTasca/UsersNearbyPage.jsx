@@ -6,9 +6,9 @@ import * as Context from './Contexts'
 
 export default function UsersNearbyPage({ navigation }) {
 
-	const { sid, uid } = useContext(Context.Player)
+	const { player: { sid } } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
-	const { nearbyUsers, setNearbyUsers } = useContext(Context.NearbyEntities)
+	const { nearbyUsers } = useContext(Context.NearbyEntities)
 	const [nearbyUsersDetails, setNearbyUsersDetails] = useState([])
 
 	useEffect(

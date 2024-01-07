@@ -6,30 +6,27 @@ import { launchImageLibrary } from 'react-native-image-picker'
 
 export default function SettingsPage({ navigation, route }) {
 
-	const { sid, uid } = useContext(Context.Player)
-	const { profileVersion, setProfileVersion } = useContext(Context.Player)
+	const { player: { sid, uid, profileVersion }, updatePlayer } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
-	const [player, setPlayer] = useState()
-	const [newName, setNewName] = useState(null)
-	const [newImage, setNewImage] = useState(null)
-	const [newSharePosition, setNewSharePosition] = useState()	// Defaults to player.sharePosition in useEffect
+	const [profile, setProfile] = useState()
+	const [newProfile, setNewProfile] = useState({
+		name: null,
+		image: null,
+		sharePosition: null
+	})
+	const updateNewProfile = (newProperties) => setNewProfile((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
-	const loadPage = () => {
-		console.log("Getting player details...")
-		database.getUserByID(sid, uid, profileVersion)
-			.then(setPlayer)
-	}
+	useEffect(() => { database.getUserByID(sid, uid, profileVersion).then(setProfile) }, [])
+	useEffect(() => { if (profile) updateNewProfile({ sharePosition: profile.positionshare }) }, [profile])
 
-	useEffect(() => loadPage(), [])
-	useEffect(() => { if (player) setNewSharePosition(player.positionshare) }, [player])
-
-	const handleUpdateUser = async (sid, uid, newName, newImage, newSharePosition) => {
+	const handleUpdateUser = async (sid, uid, newProfile) => {
+		const { name, image, sharePosition } = newProfile
 		// The local database is only updated with data from the server, which handles profileversion
-		CommunicationController.updateUser(sid, uid, newName, newImage, newSharePosition)	// Update on server
-			.then(() => CommunicationController.getUserDetails(sid, uid))					// And save its updated version
+		CommunicationController.updateUser(sid, uid, name, image, sharePosition)	// Update on server
+			.then(() => CommunicationController.getUserDetails(sid, uid))			// And save its updated version
 			.then((usr) => {
-				database.insertOrReplaceUser(usr)											// on local database
-				setProfileVersion(usr.profileversion)
+				database.insertOrReplaceUser(usr)									// on local database
+				updatePlayer({ profileVersion: usr.profileversion })
 			})
 			.then(navigation.reset({
 				index: 0,
@@ -38,7 +35,7 @@ export default function SettingsPage({ navigation, route }) {
 	}
 
 	const handleSelectImage = () => {
-		// TODO: Does not work. Library problem.
+		// TODO: Does not work. EDIT: Library problem with no solution online. Nice.
 		launchImageLibrary(
 			{ mediaType: 'photo', includeBase64: true },
 			(response) => {
@@ -47,13 +44,13 @@ export default function SettingsPage({ navigation, route }) {
 					return
 				} else {
 					if (response.assets[0].fileSize > 100 * 1024) alert("Warning: Image too big! Max size is 100 KB")
-					else setNewImage({ uri: 'data:image/png;base64' + response.assets[0].base64 })
+					else updateNewProfile({ image: { uri: 'data:image/png;base64' + response.assets[0].base64 } })
 				}
 			})
 	}
 
 	// When player hasn't been loaded yet
-	if (!player) return (
+	if (!profile) return (
 		<View>
 			<Button title="< Back" onPress={navigation.goBack} />
 			<ActivityIndicator size='large' color='#0000ff' />
@@ -61,33 +58,34 @@ export default function SettingsPage({ navigation, route }) {
 	)
 
 	// After player has been loaded
-	const image = player.picture ? { uri: 'data:image/png;base64,' + player.picture } : require('./assets/user_icon.png')
-	const shouldConfirmBeDisabled = () => newName === null && newImage === null && newSharePosition == player.positionshare
+	const image = profile.picture ? { uri: 'data:image/png;base64,' + profile.picture } : require('./assets/user_icon.png')
+	const shouldConfirmBeDisabled = () => newProfile.name === null && newProfile.image === null && newProfile.sharePosition == profile.positionshare
 
 	return (
 		<View>
+			{/* "Back" button is not rendered it firstAccess is passed as route param */}
 			{route.params?.firstAccess !== true && (<Button title="< Back" onPress={navigation.goBack} />)}
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Your profile</Text>
 			<View style={{ flexDirection: 'row' }}>
 				<Image source={require('./assets/edit_icon.png')} style={{ width: 50, height: 50 }} />
 				<TextInput
-					placeholder={player.name}
+					placeholder={profile.name}
 					maxLength={15}
 					style={{ fontSize: 36, fontWeight: 'bold' }}
-					onChangeText={(str) => setNewName(str)} />
+					onChangeText={(str) => updateNewProfile({ name: str })} />
 			</View>
 			<TouchableOpacity onPress={() => handleSelectImage()} style={{ justifyContent: 'center', alignItems: 'center' }}>
 				<Image source={image} style={{ opacity: 0.5, width: 200, height: 200 }} />
 				<Image source={require('./assets/edit_icon.png')} style={{ position: 'absolute', width: 100, height: 100 }} />
 			</TouchableOpacity>
-			<Text>HP: {player.life} | XP: {player.experience}</Text>
+			<Text>HP: {profile.life} | XP: {profile.experience}</Text>
 			<Button
-				title={(newSharePosition === true ? "Disable" : "Enable") + " position sharing"}
-				onPress={() => setNewSharePosition(!newSharePosition)} />
+				title={(newProfile.sharePosition === true ? "Disable" : "Enable") + " position sharing"}
+				onPress={() => updateNewProfile({ sharePosition: !newProfile.sharePosition })} />
 			<Button
 				title="Confirm"
 				disabled={shouldConfirmBeDisabled()}
-				onPress={() => handleUpdateUser(sid, uid, newName, newImage, newSharePosition)} />
+				onPress={() => handleUpdateUser(sid, uid, newProfile)} />
 		</View>
 	)
 }

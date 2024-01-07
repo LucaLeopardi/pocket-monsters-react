@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function RegistrationPage({ navigation }) {
 
-	const { setSID, setUID } = useContext(Context.Player)
+	const { updatePlayer } = useContext(Context.Player)
 
 	const handlePressRegister = async () => {
 		const { sid: newSid, uid: newUid } = await CommunicationController.registerUser()
@@ -18,8 +18,7 @@ export default function RegistrationPage({ navigation }) {
 		try { AsyncStorage.setItem("sid", newSid, console.log("Saved SID to AsyncStorage.")) }
 		catch (error) { console.log("ERROR: AsyncStorage: ", error) }
 
-		setUID(newUid)
-		setSID(newSid)
+		updatePlayer({ uid: newUid, sid: newSid })
 
 		console.log("Navigating from Registration to Settings...")
 		navigation.reset({

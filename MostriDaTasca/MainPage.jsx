@@ -1,14 +1,13 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { View, Text, Modal } from 'react-native'
 import * as Location from 'expo-location';
-import MapView, { Circle, Marker } from 'react-native-maps';
+import MapView, { Circle } from 'react-native-maps';
 import * as Context from './Contexts';
 import { MarkerObject, MarkerPlayer, MarkerUser, StyledButton, styles } from './CustomComponents';
-import { StatusBar } from 'expo-status-bar';
 
 export default function MainPage({ navigation, route }) {
 
-	// !!! Passing params while navigating to MainPage will show a modal with the message
+	// !!! Passing route params while navigating to MainPage will show a modal with the message
 	const { showPopUp, popUpMessage } = route.params ? route.params : { showPopUp: false, popUpMessage: null }
 	const [shouldPopUpShow, setShouldPopUpShow] = useState(showPopUp)
 
@@ -25,9 +24,8 @@ export default function MainPage({ navigation, route }) {
 		}
 	}
 
-	const { lat, lon } = useContext(Context.Location)
-	const { nearbyObjects, setNearbyObjects } = useContext(Context.NearbyEntities)
-	const { nearbyUsers, setNearbyUsers } = useContext(Context.NearbyEntities)
+	const { location: { lat, lon } } = useContext(Context.Location)
+	const { nearbyObjects, nearbyUsers } = useContext(Context.NearbyEntities)
 	const mapRef = useRef(null)
 	const defaultLatitudeDelta = 0.06	// Set by feel
 	const defaultLongitudeDelta = 0.02
@@ -52,6 +50,7 @@ export default function MainPage({ navigation, route }) {
 
 	// TODO: Change Button to stylable custom component
 	// TODO: Button to center map on player
+	// TODO: Circle to show player interaction range
 	return (
 		<View style={{ flex: 1 }}>
 			{/* Pop-up window, shown after object interaction */}

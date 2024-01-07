@@ -7,12 +7,19 @@ import * as ExpoLocation from 'expo-location'
 export const Player = React.createContext()
 
 const PlayerProvider = ({ children }) => {
-	const [sid, setSID] = React.useState(null)
-	const [uid, setUID] = React.useState(null)
-	const [profileVersion, setProfileVersion] = React.useState(0)	// Only used for Settings page
+
+	const [player, setPlayer] = React.useState({
+		sid: null,
+		uid: null,
+		profileVersion: 0,
+		weaponLevel: 0,
+		armorLevel: 0,
+		amuletLevel: 0,
+	})
+	const updatePlayer = (newProperties) => setPlayer((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
 	return (
-		<Player.Provider value={{ sid, uid, profileVersion, setSID, setUID, setProfileVersion }}>
+		<Player.Provider value={{ player, updatePlayer }}>
 			{children}
 		</Player.Provider>
 	)
@@ -22,30 +29,34 @@ const PlayerProvider = ({ children }) => {
 export const Location = React.createContext()
 
 const LocationProvider = ({ children }) => {
-	const [lat, setLat] = React.useState(45.46)
-	const [lon, setLon] = React.useState(9.22)
-	const [locationPermission, setLocationPermission] = React.useState()
+
+	const [location, setLocation] = React.useState({
+		lat: 45.46,
+		lon: 9.22,
+		permission: null
+	})
+
+	const updateLocation = (newProperties) => setLocation((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
 	useEffect(() => {
-		if (locationPermission !== 'granted') return
+		if (location.permission !== 'granted') return
 
 		let locationSubscription
 		ExpoLocation.watchPositionAsync(
 			// Position is updated every 3 seconds IF the user has moved at least 5 meters. This is ok as objects are stationary right now, and we only need to "discover" new, faraway objects. For full release, if objects can spawn anywhere a better solution would be to regularly update regardless of movement.
 			{ accuracy: ExpoLocation.Accuracy.High, timeInterval: 3000, distanceInterval: 5 },
-			(location) => {
+			(res) => {
 				console.log("Updating location...")
-				console.log(location.coords.latitude, " | ", location.coords.longitude)
-				setLat(location.coords.latitude)
-				setLon(location.coords.longitude)
+				console.log(res.coords.latitude, " | ", res.coords.longitude)
+				updateLocation({ lat: res.coords.latitude, lon: res.coords.longitude })
 			})
 			.then((res) => locationSubscription = res)
 		// Cleanup function
 		return () => { if (locationSubscription) locationSubscription.remove() }
-	}, [locationPermission])
+	}, [location.permission])
 
 	return (
-		<Location.Provider value={{ lat, lon, locationPermission, setLat, setLon, setLocationPermission }}>
+		<Location.Provider value={{ location, updateLocation }}>
 			{children}
 		</Location.Provider>
 	)
@@ -55,8 +66,9 @@ const LocationProvider = ({ children }) => {
 export const NearbyEntities = React.createContext()
 
 const NearbyEntitiesProvider = ({ children }) => {
-	const { sid, uid } = React.useContext(Player)
-	const { lat, lon } = React.useContext(Location)
+
+	const { player: { sid, uid } } = React.useContext(Player)
+	const { location: { lat, lon } } = React.useContext(Location)
 	const [nearbyUsers, setNearbyUsers] = React.useState([])
 	const [nearbyObjects, setNearbyObjects] = React.useState([])
 
@@ -83,6 +95,7 @@ const NearbyEntitiesProvider = ({ children }) => {
 export const Database = React.createContext()
 
 const DatabaseProvider = ({ children }) => {
+
 	const [database, setDatabase] = React.useState(new StorageManager())
 
 	return (

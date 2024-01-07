@@ -6,8 +6,8 @@ import { ActivityIndicator, View } from "react-native";
 
 export default function InitialPage({ navigation }) {
 
-	const { sid, uid, setSID, setUID } = useContext(Context.Player)
-	const { setLocationPermission } = useContext(Context.Location)
+	const { updatePlayer } = useContext(Context.Player)
+	const { updateLocation } = useContext(Context.Location)
 
 	useEffect(() => {
 		checkLocationPermission()
@@ -24,7 +24,7 @@ export default function InitialPage({ navigation }) {
 					routes: [{ name: 'ErrorPage', params: { message: "The app requires location permissions to function. Please grant it your App Settings and relaunch the application." } }],
 				})
 			} else {
-				setLocationPermission(result.status)
+				updateLocation({ permission: result.status })
 			}
 		}
 	}
@@ -35,8 +35,7 @@ export default function InitialPage({ navigation }) {
 		try {
 			storedUID = parseInt(await AsyncStorage.getItem("uid"))
 			storedSID = await AsyncStorage.getItem("sid")
-			setUID(storedUID)
-			setSID(storedSID)
+			updatePlayer({ uid: storedUID, sid: storedSID })
 			console.log("Stored UID: " + storedUID + " | Stored SID: " + storedSID)
 		} catch (error) {
 			console.log("ERROR: AsyncStorage: ", error)

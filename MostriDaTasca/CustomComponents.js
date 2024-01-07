@@ -25,7 +25,7 @@ export function MarkerPlayer({ lat, lon }) {
 export function MarkerUser({ user }) {
 	let image = require('./assets/user_icon.png')
 	const { database } = useContext(Context.Database)
-	const { sid } = useContext(Context.Player)
+	const { player: { sid } } = useContext(Context.Player)
 	const navigation = useNavigation()
 
 	return (
@@ -44,7 +44,7 @@ export function MarkerUser({ user }) {
 export function MarkerObject({ object }) {
 	let image = getObjectTypeIcon(object.type)
 	const { database } = useContext(Context.Database)
-	const { sid } = useContext(Context.Player)
+	const { player: { sid } } = useContext(Context.Player)
 	const navigation = useNavigation()
 
 	return (
