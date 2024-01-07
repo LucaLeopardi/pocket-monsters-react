@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
-import CommunicationController from './CommunicationController'
+import { View, Text, Button, FlatList, ActivityIndicator } from 'react-native'
 import * as Context from './Contexts'
 import ObjectsListItem from './ObjectsListItem'
 
@@ -9,13 +8,15 @@ export default function ObjectsNearbyPage({ navigation }) {
 	const { player: { sid } } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
 	const { nearbyObjects } = useContext(Context.NearbyEntities)
-	const [nearbyObjectsDetails, setNearbyObjectsDetails] = useState([])
+	const [nearbyObjectsDetails, setNearbyObjectsDetails] = useState(null)
 
 	useEffect(
 		() => {
 			Promise.all(nearbyObjects.map((obj) => database.getObjectByID(sid, obj.id)))
 				.then(setNearbyObjectsDetails)	// Calling setNearbyObjectsDetails triggers a re-render
 		}, [nearbyObjects])
+
+	if (nearbyObjectsDetails === null) return <ActivityIndicator size='large' color='#0000ff' />
 
 	return (
 		<View style={{ flex: 1 }}>

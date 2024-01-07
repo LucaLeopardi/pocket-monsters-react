@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Text, Pressable, Image, Button } from "react-native";
+import { Text, Pressable, Image } from "react-native";
 
 
 export default function ObjectsListItem({ data }) {

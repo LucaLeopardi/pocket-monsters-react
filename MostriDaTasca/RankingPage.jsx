@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
+import { View, Text, Button, FlatList, ActivityIndicator } from 'react-native'
 import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
 import * as Context from './Contexts'
@@ -8,7 +8,7 @@ export default function RankingPage({ navigation }) {
 
 	const { player: { sid } } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
-	const [ranking, setRanking] = useState([])
+	const [ranking, setRanking] = useState(null)
 
 	useEffect(
 		() => {
@@ -18,6 +18,8 @@ export default function RankingPage({ navigation }) {
 				.then((ranking) => Promise.all(ranking.map((user) => database.getUserByID(sid, user.uid, user.profileversion))))
 				.then(setRanking)	// Calling setRanking triggers a re-render
 		}, [])
+
+	if (ranking === null) return <ActivityIndicator size='large' color='#0000ff' />
 
 	return (
 		<View style={{ flex: 1 }}>

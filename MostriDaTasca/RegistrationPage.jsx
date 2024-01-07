@@ -1,14 +1,18 @@
-import { View, Text, Button, Linking, Pressable, Image } from 'react-native'
+import { View, Text, Linking, Pressable, Image, ActivityIndicator } from 'react-native'
 import CommunicationController from './CommunicationController'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import * as Context from './Contexts'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { StyledButton } from './CustomComponents'
 
 export default function RegistrationPage({ navigation }) {
 
 	const { updatePlayer } = useContext(Context.Player)
+	const [signUpPressed, setSignUpPressed] = useState(false)
 
 	const handlePressRegister = async () => {
+		setSignUpPressed(true)
+
 		const { sid: newSid, uid: newUid } = await CommunicationController.registerUser()
 		console.log("New UID: " + newUid + " | New SID: " + newSid)
 
@@ -31,7 +35,10 @@ export default function RegistrationPage({ navigation }) {
 		<View>
 			<Text style={{ fontSize: 50, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
 			<Image source={require('./assets/app_icon.png')} style={{ width: 100, height: 100 }} />
-			<Button title="Sign up" onPress={handlePressRegister} />
+			{signUpPressed ?
+				<ActivityIndicator size='large' color='#0000ff' />
+				:
+				<StyledButton title="Sign up" onPress={handlePressRegister} />}
 			<Pressable onPress={() => Linking.openURL("https://icons8.com/")}>
 				<Text>Icons by icons8</Text>
 			</Pressable>

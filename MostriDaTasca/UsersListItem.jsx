@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import { View, Text, Button, Pressable, Image } from 'react-native'
+import { View, Text, Pressable, Image } from 'react-native'
 
 export default function UsersListItem({ data }) {
 	const navigation = useNavigation()
