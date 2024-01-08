@@ -10,7 +10,6 @@ export default function ObjectDetailsPage({ navigation, route }) {
 	const { player: { sid, uid, weaponLevel, armorLevel, amuletLevel }, updatePlayer } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
 
-	// TODO: Effect and relative message
 	const activateObject = async (obj) => {
 		const res = await CommunicationController.activateObject(sid, obj.id)
 
@@ -55,34 +54,34 @@ export default function ObjectDetailsPage({ navigation, route }) {
 				return (<View>
 					<Text style={{ fontSize: 24, fontWeight: 'bold', textTransform: 'uppercase' }}>Danger</Text>
 					<Text style={{ fontSize: 20, fontStyle: 'italic' }}>You could lose {Math.round(obj.level - (obj.level / 100) * weaponLevel)}-{Math.round(2 * obj.level - (2 * obj.level / 100) * weaponLevel)} HP in this fight.</Text>
-					<StyledButton disabled={!obj.withinRange} title='Fight' onPress={() => activateObject(obj)} />
+					<StyledButton disabled={!obj.withinRange} title={obj.withinRange ? 'Fight' : 'Out of range'} onPress={() => activateObject(obj)} />
 				</View>)
 			case 'weapon':
 				return (<View>
 					<Text style={{ fontSize: 24, fontWeight: 'bold', textTransform: 'uppercase' }}>Effect</Text>
 					<Text style={{ fontSize: 20, fontStyle: 'italic' }}>Reduces Monster damage by {obj.level}%.</Text>
 					<Text style={{ fontSize: 16, fontStyle: 'italic' }}>Current: {weaponLevel}%</Text>
-					<StyledButton disabled={!obj.withinRange} title='Equip' onPress={() => activateObject(obj)} />
+					<StyledButton disabled={!obj.withinRange} title={obj.withinRange ? 'Equip' : 'Out of range'} onPress={() => activateObject(obj)} />
 				</View>)
 			case 'armor':
 				return (<View>
 					<Text style={{ fontSize: 24, fontWeight: 'bold', textTransform: 'uppercase' }}>Effect</Text>
 					<Text style={{ fontSize: 20, fontStyle: 'italic' }}>Increases HP by {obj.level} points.</Text>
 					<Text style={{ fontSize: 16, fontStyle: 'italic' }}>Current: +{armorLevel} HP</Text>
-					<StyledButton disabled={!obj.withinRange} title='Equip' onPress={() => activateObject(obj)} />
+					<StyledButton disabled={!obj.withinRange} title={obj.withinRange ? 'Equip' : 'Out of range'} onPress={() => activateObject(obj)} />
 				</View>)
 			case 'amulet':
 				return (<View>
 					<Text style={{ fontSize: 24, fontWeight: 'bold', textTransform: 'uppercase' }}>Effect</Text>
 					<Text style={{ fontSize: 20, fontStyle: 'italic' }}>Increases interaction reach by {obj.level}%.</Text>
 					<Text style={{ fontSize: 16, fontStyle: 'italic' }}>Current: {amuletLevel}%</Text>
-					<StyledButton disabled={!obj.withinRange} title='Equip' onPress={() => activateObject(obj)} />
+					<StyledButton disabled={!obj.withinRange} title={obj.withinRange ? 'Equip' : 'Out of range'} onPress={() => activateObject(obj)} />
 				</View>)
 			case 'candy':
 				return (<View>
 					<Text style={{ fontSize: 24, fontWeight: 'bold', textTransform: 'uppercase' }}>Effect</Text>
 					<Text style={{ fontSize: 20, fontStyle: 'italic' }}>Restores {obj.level}-{2 * obj.level} HP, up to MAX HP.</Text>
-					<StyledButton disabled={!obj.withinRange} title='Eat' onPress={() => activateObject(obj)} />
+					<StyledButton disabled={!obj.withinRange} title={obj.withinRange ? 'Eat' : 'Out of range'} onPress={() => activateObject(obj)} />
 				</View>)
 		}
 	}
@@ -94,7 +93,6 @@ export default function ObjectDetailsPage({ navigation, route }) {
 			<Image source={image} style={{ width: 200, height: 200 }} />
 			<Text style={{ fontSize: 20, textTransform: 'uppercase' }}>Level {data.level} {data.type}</Text>
 			{getObjectTypeContent(data)}
-			{data.withinRange ? null : <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'red' }}>Out of range!</Text>}
 		</View>
 	)
 }

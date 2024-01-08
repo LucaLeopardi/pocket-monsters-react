@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import * as Context from './Contexts';
-import { StyleSheet, Text, TouchableOpacity, Image, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Image, View, TextInput } from 'react-native';
 import { Marker } from 'react-native-maps';
+import CommunicationController from './CommunicationController';
 
 
 export const StyledButton = ({ title = null, image = null, onPress = null, disabled = false }) =>
@@ -13,8 +14,115 @@ export const StyledButton = ({ title = null, image = null, onPress = null, disab
 		</View>
 	</TouchableOpacity >
 
-export const SettingsContent = (profile) => {
 
+export const UserSettingsContent = ({ profile }) => {
+
+	const navigation = useNavigation()
+	const { database } = useContext(Context.Database)
+	const { player: { sid, uid }, updatePlayer } = useContext(Context.Player)
+	const [newProfile, setNewProfile] = useState({
+		name: null,
+		image: null,
+		sharePosition: null
+	})
+	const updateNewProfile = (newProperties) => setNewProfile((oldProperties) => ({ ...oldProperties, ...newProperties }))
+
+	useEffect(() => updateNewProfile({ sharePosition: profile.positionshare }), [])
+
+	const handleUpdateUser = async (sid, uid, newProfile) => {
+		const { name, image, sharePosition } = newProfile
+		// The local database is only updated with data from the server, which handles profileversion
+		CommunicationController.updateUser(sid, uid, name, image, sharePosition)	// Update on server
+			.then(() => CommunicationController.getUserDetails(sid, uid))			// And save its updated version
+			.then((usr) => {
+				database.insertOrReplaceUser(usr)									// on local database
+				updatePlayer({ profileVersion: usr.profileversion })
+			})
+			.then(navigation.reset({
+				index: 0,
+				routes: [{ name: 'Main' }]
+			}))
+	}
+
+	// TODO: Does not work. EDIT: Library problem with no solution online. Nice.
+	const handleSelectImage = () => {
+		launchImageLibrary(
+			{ mediaType: 'photo', includeBase64: true },
+			(response) => {
+				if (response.errorMessage) {
+					console.log("Error selecting image: " + response.errorMessage)
+					return
+				} else {
+					if (response.assets[0].fileSize > 100 * 1024) alert("Warning: Image too big! Max size is 100 KB")
+					else updateNewProfile({ image: { uri: 'data:image/png;base64' + response.assets[0].base64 } })
+				}
+			})
+	}
+
+	const image = profile.picture ? { uri: 'data:image/png;base64,' + profile.picture } : require('./assets/user_icon.png')
+	const shouldConfirmBeDisabled = () => newProfile.name === null && newProfile.image === null && newProfile.sharePosition == profile.positionshare
+
+	return (
+		<View>
+			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Your profile</Text>
+			<View style={{ flexDirection: 'row' }}>
+				<Image source={require('./assets/edit_icon.png')} style={{ width: 50, height: 50 }} />
+				<TextInput
+					placeholder={profile.name}
+					maxLength={15}
+					style={{ fontSize: 36, fontWeight: 'bold' }}
+					onChangeText={(str) => updateNewProfile({ name: str })} />
+			</View>
+			<TouchableOpacity onPress={() => handleSelectImage()} style={{ justifyContent: 'center', alignItems: 'center' }}>
+				<Image source={image} style={{ opacity: 0.5, width: 200, height: 200 }} />
+				<Image source={require('./assets/edit_icon.png')} style={{ position: 'absolute', width: 100, height: 100 }} />
+			</TouchableOpacity>
+			<Text>HP: {profile.life} | XP: {profile.experience}</Text>
+			<Text>Position sharing: {newProfile.sharePosition ? "ON" : "OFF"}</Text>
+			<StyledButton
+				title={(newProfile.sharePosition === true ? "Disable" : "Enable")}
+				onPress={() => updateNewProfile({ sharePosition: !newProfile.sharePosition })} />
+			<StyledButton
+				title="Confirm"
+				disabled={shouldConfirmBeDisabled()}
+				onPress={() => handleUpdateUser(sid, uid, newProfile)} />
+		</View>
+	)
+}
+
+
+export const EquipmentSlot = ({ type, object }) => {
+	// Empty slot
+	if (object === null) return (
+		<View>
+			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'capitalize' }}>{type}</Text>
+			<Image source={getObjectTypeIcon(type)} style={{ width: 100, height: 100, opacity: 0.5 }} />
+		</View>
+	)
+	// Item info
+	else {
+		let description
+		switch (object.type) {
+			case 'weapon':
+				description = "- " + object.level + "% Monster damage"
+				break
+			case 'armor':
+				description = "+ " + object.level + " HP"
+				break
+			case 'amulet':
+				description = "+ " + object.level + "% reach"
+				break
+		}
+		return (
+			<View>
+				<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>{object.type}</Text>
+				<Text style={{ fontSize: 16, textTransform: 'capitalize' }}>{object.name}</Text>
+				<Image source={object.image ? { uri: 'item:image/png;base64,' + object.image } : getObjectTypeIcon(type)} style={{ width: 100, height: 100 }} />
+				<Text style={{ fontSize: 16 }}>Level {object.level}</Text>
+				<Text style={{ fontSize: 16, fontStyle: 'italic' }}>{description}</Text>
+			</View>
+		)
+	}
 }
 
 
