@@ -80,7 +80,7 @@ export default function MainPage({ navigation, route }) {
 					latitudeDelta: defaultLatitudeDelta,
 					longitudeDelta: defaultLongitudeDelta,
 				}}>
-				<Circle center={{ latitude: lat, longitude: lon }} radius={100 + amuletLevel} fillColor='#E8D04A30' strokeWidth={0} />
+				<Circle center={{ latitude: lat, longitude: lon }} radius={100 + amuletLevel} fillColor='#f2e24c50' strokeWidth={0} />
 				{usersMarkers}
 				{objectsMarkers}
 				{playerMaker}

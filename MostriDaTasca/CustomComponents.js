@@ -64,8 +64,6 @@ export const UserSettingsContent = ({ profile }) => {
 
 	const shouldConfirmBeDisabled = () => {
 		return newProfile.name === newProfile.picture === newProfile.sharePosition === null || newProfile.sharePosition == profile.positionshare
-		console.log(newProfile)
-		return newProfile.name === null && newProfile.image === null && (newProfile.sharePosition === profile.positionshare || newProfile.sharePosition === null)
 	}
 
 	return (
@@ -98,7 +96,7 @@ export const UserSettingsContent = ({ profile }) => {
 
 
 export const EquipmentSlot = ({ type, object }) => {
-	// Empty slot
+	// Empty item slot
 	if (object === null) return (
 		<View>
 			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'capitalize' }}>{type}</Text>
@@ -111,13 +109,13 @@ export const EquipmentSlot = ({ type, object }) => {
 		let description
 		switch (object.type) {
 			case 'weapon':
-				description = "- " + object.level + "% Monster damage"
+				description = "+ " + object.level + "% DMG Resistance"
 				break
 			case 'armor':
 				description = "+ " + object.level + " HP"
 				break
 			case 'amulet':
-				description = "+ " + object.level + "% reach"
+				description = "+ " + object.level + "% Reach"
 				break
 		}
 		return (
@@ -145,11 +143,18 @@ export function MarkerPlayer({ lat, lon }) {
 		/>)
 }
 
-export function MarkerUser({ user }) {
+export function MarkerUser({ user, disabled = false }) {
 	let image = require('./assets/user_icon.png')
 	const { database } = useContext(Context.Database)
 	const { player: { sid } } = useContext(Context.Player)
 	const navigation = useNavigation()
+
+	const handlePress = async () => {
+		if (disabled) return
+		const data = await database.getUserByID(sid, user.uid, user.profileversion)
+		if (data.picture) image = { uri: 'data:image/png;base64,' + data.picture }
+		navigation.navigate('UserDetails', { data, image })
+	}
 
 	return (
 		<Marker
@@ -158,11 +163,7 @@ export function MarkerUser({ user }) {
 			coordinate={{ latitude: user.lat, longitude: user.lon }}
 			flat={true}
 			anchor={{ x: 0.5, y: 0.5 }}
-			onPress={async () => {
-				const data = await database.getUserByID(sid, user.uid, user.profileversion)
-				if (data.picture) image = { uri: 'data:image/png;base64,' + data.picture }
-				navigation.navigate('UserDetails', { data, image })
-			}}
+			onPress={handlePress}
 		/>)
 }
 
@@ -181,7 +182,7 @@ export function MarkerObject({ object }) {
 			anchor={{ x: 0.5, y: 0.5 }}
 			onPress={async () => {
 				let data = await database.getObjectByID(sid, object.id)
-				data = { ...data, withinRange: object.withinRange }	// Have to re-add withinRange as it's not stored in the database
+				data = { ...data, distance: object.distance, withinRange: object.withinRange }	// Have to re-add distance as it's not stored in the database
 				if (data.image) image = { uri: 'data:image/png;base64,' + data.image }
 				navigation.navigate('ObjectDetails', { data, image })
 			}}

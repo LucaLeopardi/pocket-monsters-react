@@ -6,19 +6,20 @@ import { StyledButton } from './CustomComponents'
 
 export default function ObjectsNearbyPage({ navigation }) {
 
-	const { player: { sid } } = useContext(Context.Player)
+	const { player: { sid, amuletLevel } } = useContext(Context.Player)
 	const { database } = useContext(Context.Database)
 	const { nearbyObjects } = useContext(Context.NearbyEntities)
 	const [nearbyObjectsDetails, setNearbyObjectsDetails] = useState(null)
 
 	const getObjectAndDistance = async (obj) => {
 		return database.getObjectByID(sid, obj.id)
-			.then((details) => ({ ...details, withinRange: obj.withinRange }))
+			.then((data) => ({ ...data, distance: obj.distance, withinRange: obj.withinRange }))
 	}
 
 	useEffect(
 		() => {
 			Promise.all(nearbyObjects.map((obj) => getObjectAndDistance(obj)))
+				.then((objs) => objs.sort((a, b) => a.distance - b.distance))
 				.then(setNearbyObjectsDetails)	// Calling setNearbyObjectsDetails triggers a re-render
 		}, [nearbyObjects])
 
@@ -27,6 +28,7 @@ export default function ObjectsNearbyPage({ navigation }) {
 	return (
 		<View style={{ flex: 1 }}>
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Objects nearby</Text>
+			<Text style={{ fontSize: 20 }}>Interaction range: {100 + amuletLevel}m</Text>
 			<FlatList style={{ flex: 1 }}
 				data={nearbyObjectsDetails}
 				renderItem={({ item }) => <ObjectsListItem data={item} />}

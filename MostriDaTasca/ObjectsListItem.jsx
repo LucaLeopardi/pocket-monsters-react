@@ -32,6 +32,7 @@ export default function ObjectsListItem({ data }) {
 				<Image source={image} style={{ width: 50, height: 50 }} />
 				<Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.name}</Text>
 				<Text style={{ fontSize: 16 }}>Level {data.level} {data.type}</Text>
+				<Text style={{ fontSize: 16 }}>Distance: {data.distance}m</Text>
 			</View>
 		</Pressable>
 	)

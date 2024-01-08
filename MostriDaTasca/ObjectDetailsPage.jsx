@@ -12,6 +12,7 @@ export default function ObjectDetailsPage({ navigation, route }) {
 
 	const activateObject = async (obj) => {
 		const res = await CommunicationController.activateObject(sid, obj.id)
+		console.log(res)
 
 		// Update player data
 		database.insertOrReplaceUser(await CommunicationController.getUserDetails(sid, uid))
@@ -23,7 +24,7 @@ export default function ObjectDetailsPage({ navigation, route }) {
 					popUpMessage = "YOU DIED\n\nAll experience and items were lost"
 					updatePlayer({ weaponLevel: 0, armorLevel: 0, amuletLevel: 0 })
 				}
-				else popUpMessage = "YOU WON!\n\nXP is now " + res.experience
+				else popUpMessage = "YOU WON!\n\nYou gained " + obj.level + "XP!\nHP: " + res.life + "\nXP:" + res.experience
 				break
 			case 'weapon':
 				updatePlayer({ weaponLevel: obj.level })
@@ -49,6 +50,7 @@ export default function ObjectDetailsPage({ navigation, route }) {
 	}
 
 	const getObjectTypeContent = (obj) => {
+
 		switch (obj.type) {
 			case 'monster':
 				return (<View>
@@ -93,6 +95,7 @@ export default function ObjectDetailsPage({ navigation, route }) {
 			<Image source={image} style={{ width: 200, height: 200 }} />
 			<Text style={{ fontSize: 20, textTransform: 'uppercase' }}>Level {data.level} {data.type}</Text>
 			{getObjectTypeContent(data)}
+			<Text style={{ fontSize: 16, fontStyle: 'italic' }}>Distance: {data.distance}m</Text>
 		</View>
 	)
 }

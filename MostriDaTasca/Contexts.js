@@ -47,13 +47,8 @@ const LocationProvider = ({ children }) => {
 
 		let locationSubscription
 		ExpoLocation.watchPositionAsync(
-			// Position is updated every 3 seconds IF the user has moved at least 5 meters. This is ok as objects are stationary right now, and we only need to "discover" new, faraway objects. For full release, if objects can spawn anywhere a better solution would be to regularly update regardless of movement.
-			{ accuracy: ExpoLocation.Accuracy.High, timeInterval: 3000, distanceInterval: 5 },
-			(res) => {
-				console.log("Updating location...")
-				console.log(res.coords.latitude, " | ", res.coords.longitude)
-				updateLocation({ lat: res.coords.latitude, lon: res.coords.longitude })
-			})
+			{ accuracy: ExpoLocation.Accuracy.High, timeInterval: 5000, distanceInterval: 0 },
+			(res) => updateLocation({ lat: res.coords.latitude, lon: res.coords.longitude }))
 			.then((res) => locationSubscription = res)
 		// Cleanup function
 		return () => { if (locationSubscription) locationSubscription.remove() }
@@ -76,11 +71,6 @@ const NearbyEntitiesProvider = ({ children }) => {
 	const [nearbyUsers, setNearbyUsers] = React.useState([])
 	const [nearbyObjects, setNearbyObjects] = React.useState([])
 
-	const checkWithinRange = (obj) => {
-		const distance = geolib.getDistance({ latitude: lat, longitude: lon }, { latitude: obj.lat, longitude: obj.lon })
-		return (distance <= 100 + amuletLevel) 	// Amulet level is actually a percentage, but base value is 100 so...
-	}
-
 	useEffect(
 		() => {
 			if (sid == null) return		// To avoid sending requests at launch before user data is loaded or created
@@ -91,8 +81,11 @@ const NearbyEntitiesProvider = ({ children }) => {
 				.then(setNearbyUsers)
 			console.log("Getting objects nearby...")
 			CommunicationController.getObjectsNearby(sid, lat, lon)
-				// TODO: add distance and sort by it
-				.then((objs) => objs.map((obj) => ({ ...obj, withinRange: checkWithinRange(obj) })))
+				.then((objs) => objs.map((obj) => {
+					// Add distance and withinRange properties to each object
+					dist = geolib.getDistance({ latitude: lat, longitude: lon }, { latitude: obj.lat, longitude: obj.lon })
+					return { ...obj, distance: dist, withinRange: dist <= 100 + amuletLevel }
+				}))
 				.then(setNearbyObjects)
 		}, [lat, lon, amuletLevel, sid])		// sid dependency to initialize at launch even if lat and lon are not immediately changed
 
