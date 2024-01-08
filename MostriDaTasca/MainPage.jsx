@@ -67,7 +67,9 @@ export default function MainPage({ navigation, route }) {
 			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
 			<StyledButton image={require('./assets/settings_icon.png')} onPress={() => navigation.navigate("Settings")} />
 			<StyledButton title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />
+			{/* Whoops. Extra page, not in the specification.
 			<StyledButton title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
+			*/}
 			<StyledButton title="Ranking" onPress={() => navigation.navigate("Ranking")} />
 			<MapView
 				ref={mapRef}

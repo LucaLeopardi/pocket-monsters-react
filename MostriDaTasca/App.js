@@ -38,8 +38,10 @@ export default function App() {
 					<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage}
 						options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
 					<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
+					{/*	Whoops. Extra page, not in the specification.
 					<Stack.Screen name="UsersNearby" component={UsersNearbyPage}
-						options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
+					options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
+					*/}
 					<Stack.Screen name="UserDetails" component={UserDetailsPage} />
 					<Stack.Screen name="ErrorPage" component={ErrorPage} options={{ animation: 'none' }} />
 				</Stack.Navigator>
