@@ -41,11 +41,13 @@ export default function SettingsPage({ navigation, route }) {
 			{/* "Back" button is not rendered it firstAccess is passed as route param */}
 			{route.params?.firstAccess !== true && (<StyledButton title="< Back" onPress={navigation.goBack} />)}
 			<UserSettingsContent profile={profile} />
-			<View style={{ flexDirection: 'row' }}>
-				<EquipmentSlot type='weapon' object={weapon} />
-				<EquipmentSlot type='armor' object={armor} />
-				<EquipmentSlot type='amulet' object={amulet} />
-			</View>
+			{route.params?.firstAccess !== true && (
+				<View style={{ flexDirection: 'row' }}>
+					<EquipmentSlot type='weapon' object={weapon} />
+					<EquipmentSlot type='armor' object={armor} />
+					<EquipmentSlot type='amulet' object={amulet} />
+				</View>
+			)}
 		</View>
 	)
 }

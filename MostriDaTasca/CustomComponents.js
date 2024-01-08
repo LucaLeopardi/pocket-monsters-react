@@ -97,6 +97,7 @@ export const EquipmentSlot = ({ type, object }) => {
 		<View>
 			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'capitalize' }}>{type}</Text>
 			<Image source={getObjectTypeIcon(type)} style={{ width: 100, height: 100, opacity: 0.5 }} />
+			<Text style={{ fontSize: 16 }}>Empty</Text>
 		</View>
 	)
 	// Item info
