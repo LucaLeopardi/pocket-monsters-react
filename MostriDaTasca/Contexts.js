@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import StorageManager from './StorageManager'
 import CommunicationController from './CommunicationController'
 import * as ExpoLocation from 'expo-location'
+import * as geolib from 'geolib'
 
 
 export const Player = React.createContext()
@@ -70,10 +71,15 @@ export const NearbyEntities = React.createContext()
 
 const NearbyEntitiesProvider = ({ children }) => {
 
-	const { player: { sid, uid } } = React.useContext(Player)
+	const { player: { sid, uid, amuletLevel } } = React.useContext(Player)
 	const { location: { lat, lon } } = React.useContext(Location)
 	const [nearbyUsers, setNearbyUsers] = React.useState([])
 	const [nearbyObjects, setNearbyObjects] = React.useState([])
+
+	const checkWithinRange = (obj) => {
+		const distance = geolib.getDistance({ latitude: lat, longitude: lon }, { latitude: obj.lat, longitude: obj.lon })
+		return (distance <= 100 + amuletLevel) 	// Amulet level is actually a percentage, but base value is 100 so...
+	}
 
 	useEffect(
 		() => {
@@ -84,8 +90,11 @@ const NearbyEntitiesProvider = ({ children }) => {
 				.then((res) => res.filter((user) => user.uid != uid))
 				.then(setNearbyUsers)
 			console.log("Getting objects nearby...")
-			CommunicationController.getObjectsNearby(sid, lat, lon).then(setNearbyObjects)
-		}, [lat, lon, sid])		// sid dependency to initialize at launch even if lat and lon are not immediately changed
+			CommunicationController.getObjectsNearby(sid, lat, lon)
+				// TODO: add distance and sort by it
+				.then((objs) => objs.map((obj) => ({ ...obj, withinRange: checkWithinRange(obj) })))
+				.then(setNearbyObjects)
+		}, [lat, lon, amuletLevel, sid])		// sid dependency to initialize at launch even if lat and lon are not immediately changed
 
 	return (
 		<NearbyEntities.Provider value={{ nearbyUsers, nearbyObjects, setNearbyUsers, setNearbyObjects }}>

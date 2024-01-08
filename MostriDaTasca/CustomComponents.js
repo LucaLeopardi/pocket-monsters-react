@@ -4,6 +4,7 @@ import * as Context from './Contexts';
 import { StyleSheet, Text, TouchableOpacity, Image, View, TextInput } from 'react-native';
 import { Marker } from 'react-native-maps';
 import CommunicationController from './CommunicationController';
+import * as ImagePicker from 'expo-image-picker'
 
 
 export const StyledButton = ({ title = null, image = null, onPress = null, disabled = false }) =>
@@ -22,7 +23,7 @@ export const UserSettingsContent = ({ profile }) => {
 	const { player: { sid, uid }, updatePlayer } = useContext(Context.Player)
 	const [newProfile, setNewProfile] = useState({
 		name: null,
-		image: null,
+		picture: null,
 		sharePosition: null
 	})
 	const updateNewProfile = (newProperties) => setNewProfile((oldProperties) => ({ ...oldProperties, ...newProperties }))
@@ -30,9 +31,9 @@ export const UserSettingsContent = ({ profile }) => {
 	useEffect(() => updateNewProfile({ sharePosition: profile.positionshare }), [])
 
 	const handleUpdateUser = async (sid, uid, newProfile) => {
-		const { name, image, sharePosition } = newProfile
+		const { name, picture, sharePosition } = newProfile
 		// The local database is only updated with data from the server, which handles profileversion
-		CommunicationController.updateUser(sid, uid, name, image, sharePosition)	// Update on server
+		CommunicationController.updateUser(sid, uid, name, picture, sharePosition)	// Update on server
 			.then(() => CommunicationController.getUserDetails(sid, uid))			// And save its updated version
 			.then((usr) => {
 				database.insertOrReplaceUser(usr)									// on local database
@@ -44,23 +45,28 @@ export const UserSettingsContent = ({ profile }) => {
 			}))
 	}
 
-	// TODO: Does not work. EDIT: Library problem with no solution online. Nice.
-	const handleSelectImage = () => {
-		launchImageLibrary(
-			{ mediaType: 'photo', includeBase64: true },
-			(response) => {
-				if (response.errorMessage) {
-					console.log("Error selecting image: " + response.errorMessage)
-					return
-				} else {
-					if (response.assets[0].fileSize > 100 * 1024) alert("Warning: Image too big! Max size is 100 KB")
-					else updateNewProfile({ image: { uri: 'data:image/png;base64' + response.assets[0].base64 } })
-				}
-			})
+	const handleSelectImage = async () => {
+		const res = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			base64: true,
+		})
+		const image = res.assets[0]
+		if (image) {
+			if (image.fileSize > 100 * 1024) alert("Warning: Image too big! Max size is 100 KB")
+			else updateNewProfile({ picture: image.base64 })
+		}
 	}
 
-	const image = profile.picture ? { uri: 'data:image/png;base64,' + profile.picture } : require('./assets/user_icon.png')
-	const shouldConfirmBeDisabled = () => newProfile.name === null && newProfile.image === null && newProfile.sharePosition == profile.positionshare
+	let image
+	if (newProfile.picture) image = { uri: 'data:image/png;base64,' + newProfile.picture }
+	else if (profile.picture) image = { uri: 'data:image/png;base64,' + profile.picture }
+	else image = require('./assets/user_icon.png')
+
+	const shouldConfirmBeDisabled = () => {
+		return newProfile.name === newProfile.picture === newProfile.sharePosition === null || newProfile.sharePosition == profile.positionshare
+		console.log(newProfile)
+		return newProfile.name === null && newProfile.image === null && (newProfile.sharePosition === profile.positionshare || newProfile.sharePosition === null)
+	}
 
 	return (
 		<View>
@@ -80,7 +86,7 @@ export const UserSettingsContent = ({ profile }) => {
 			<Text>HP: {profile.life} | XP: {profile.experience}</Text>
 			<Text>Position sharing: {newProfile.sharePosition ? "ON" : "OFF"}</Text>
 			<StyledButton
-				title={(newProfile.sharePosition === true ? "Disable" : "Enable")}
+				title={(newProfile.sharePosition ? "Disable" : "Enable")}
 				onPress={() => updateNewProfile({ sharePosition: !newProfile.sharePosition })} />
 			<StyledButton
 				title="Confirm"
@@ -174,7 +180,8 @@ export function MarkerObject({ object }) {
 			flat={true}
 			anchor={{ x: 0.5, y: 0.5 }}
 			onPress={async () => {
-				const data = await database.getObjectByID(sid, object.id)
+				let data = await database.getObjectByID(sid, object.id)
+				data = { ...data, withinRange: object.withinRange }	// Have to re-add withinRange as it's not stored in the database
 				if (data.image) image = { uri: 'data:image/png;base64,' + data.image }
 				navigation.navigate('ObjectDetails', { data, image })
 			}}
