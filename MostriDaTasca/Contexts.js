@@ -38,12 +38,14 @@ export const Location = React.createContext()
 
 const LocationProvider = ({ children }) => {
 
+	const updateInterval = 5000		// Also affects NearbyEntities update rate
+
 	const [location, setLocation] = React.useState({
 		lat: 45.46,
 		lon: 9.22,
-		permission: null
+		permission: null,	// Updated in InitialPage
+		time: null
 	})
-
 	const updateLocation = (newProperties) => setLocation((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
 	useEffect(() => {
@@ -51,11 +53,10 @@ const LocationProvider = ({ children }) => {
 			console.log("No location permission")
 			return
 		}
-
 		let locationSubscription
 		ExpoLocation.watchPositionAsync(
-			{ accuracy: ExpoLocation.Accuracy.High, timeInterval: 5000, distanceInterval: 0 },
-			(res) => updateLocation({ lat: res.coords.latitude, lon: res.coords.longitude }))
+			{ accuracy: ExpoLocation.Accuracy.High, timeInterval: updateInterval, distanceInterval: 0 },
+			(res) => updateLocation({ lat: res.coords.latitude, lon: res.coords.longitude, time: res.timestamp }))
 			.then((res) => locationSubscription = res)
 		// Cleanup function
 		return () => { if (locationSubscription) locationSubscription.remove() }
@@ -74,7 +75,7 @@ export const NearbyEntities = React.createContext()
 const NearbyEntitiesProvider = ({ children }) => {
 
 	const { player: { sid, uid, amuletLevel } } = React.useContext(Player)
-	const { location: { lat, lon } } = React.useContext(Location)
+	const { location: { lat, lon, time } } = React.useContext(Location)
 	const [nearbyUsers, setNearbyUsers] = React.useState([])
 	const [nearbyObjects, setNearbyObjects] = React.useState([])
 
@@ -95,7 +96,7 @@ const NearbyEntitiesProvider = ({ children }) => {
 					return { ...obj, distance: dist, withinRange: dist <= 100 + amuletLevel }
 				}))
 				.then(setNearbyObjects)
-		}, [lat, lon, amuletLevel, sid])		// sid dependency to initialize at launch even if lat and lon are not immediately changed
+		}, [lat, lon, time, amuletLevel, sid])		// sid dependency to initialize at launch even if lat and lon are not immediately changed
 
 	return (
 		<NearbyEntities.Provider value={{ nearbyUsers, nearbyObjects, setNearbyUsers, setNearbyObjects }}>

@@ -20,15 +20,19 @@ export default function RankingPage({ navigation }) {
 				.then(setRanking)	// Calling setRanking triggers a re-render
 		}, [])
 
-	if (ranking === null) return <ActivityIndicator size='large' color='#0000ff' />
+
+	let content
+	if (ranking === null) content = <ActivityIndicator style={{ flex: 1 }} size='large' color='#0000ff' />
+	else content = <FlatList
+		style={{ flex: 1 }}
+		data={ranking}
+		renderItem={({ item }) => <UsersListItem data={item} />}
+		keyExtractor={(item) => item.uid} />
 
 	return (
 		<View style={{ flex: 1 }}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Top players</Text>
-			<FlatList style={{ flex: 1 }}
-				data={ranking}
-				renderItem={({ item }) => <UsersListItem data={item} />}
-				keyExtractor={(item) => item.uid} />
+			{content}
 			<StyledButton title="v close v" onPress={navigation.goBack} />
 		</View>
 	)

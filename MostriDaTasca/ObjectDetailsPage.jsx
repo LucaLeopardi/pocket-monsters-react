@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Modal, ActivityIndicator } from 'react-native'
 import { MarkerObject, StyledButton, styles } from './CustomComponents'
 import CommunicationController from './CommunicationController'
 import { useContext, useState } from 'react'
@@ -9,8 +9,9 @@ export default function ObjectDetailsPage({ navigation, route }) {
 
 	const { data, image } = route.params
 	const { player: { sid, uid, weaponLevel, armorLevel, amuletLevel }, updatePlayer } = useContext(Context.Player)
+	const { nearbyObjects, setNearbyObjects } = useContext(Context.NearbyEntities)
 	const { database } = useContext(Context.Database)
-	console.log(weaponLevel, armorLevel, amuletLevel)
+	const [shouldOverlayShow, setShouldOverlayShow] = useState(false)
 
 	const setTypeSpecificData = (obj) => {
 		let temp
@@ -70,8 +71,8 @@ export default function ObjectDetailsPage({ navigation, route }) {
 	const [typeData, setTypeData] = useState(setTypeSpecificData(data))
 
 	const activateObject = async (obj) => {
+		setShouldOverlayShow(true)
 		const res = await CommunicationController.activateObject(sid, obj.id)
-		console.log(res)
 
 		database.insertOrReplaceUser(await CommunicationController.getUserDetails(sid, uid))
 
@@ -90,6 +91,8 @@ export default function ObjectDetailsPage({ navigation, route }) {
 		}
 
 		if (playerUpdateData) updatePlayer(playerUpdateData)
+		// Remove object from nearby objects list. The server will do it (in an eventual release) but until they refresh it would still be there
+		setNearbyObjects(nearbyObjects.filter((o) => o.id !== obj.id))
 
 		navigation.reset({
 			index: 0,
@@ -100,6 +103,10 @@ export default function ObjectDetailsPage({ navigation, route }) {
 
 	return (
 		<View>
+			<Modal visible={shouldOverlayShow} animationType='fade' transparent={true} >
+				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
+				<ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
+			</Modal>
 			<StyledButton title="< Back" onPress={navigation.goBack} />
 			<Text style={{ fontSize: 30, fontWeight: 'bold' }}>{data.name}</Text>
 			<Image source={image} style={{ width: 200, height: 200 }} />

@@ -53,7 +53,7 @@ export default function MainPage({ navigation, route }) {
 	return (
 		<View style={{ flex: 1 }}>
 			{/* Pop-up window, shown after object interaction */}
-			{/* TODO: Fix StatusBar becoming visible when the Modal is. EDIT: Apparently it's an unresolved issue. */}
+			{/* TODO: Fix StatusBar becoming visible when the Modal is. EDIT: Apparently it's an unresolved issue with Modal. */}
 			<Modal visible={shouldPopUpShow} animationType='fade' transparent={true}>
 				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
 				<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

@@ -23,16 +23,20 @@ export default function ObjectsNearbyPage({ navigation }) {
 				.then(setNearbyObjectsDetails)	// Calling setNearbyObjectsDetails triggers a re-render
 		}, [nearbyObjects])
 
-	if (nearbyObjectsDetails === null) return <ActivityIndicator size='large' color='#0000ff' />
+
+	let content
+	if (nearbyObjectsDetails === null) content = <ActivityIndicator style={{ flex: 1 }} size='large' color='#0000ff' />
+	else content = <FlatList
+		style={{ flex: 1 }}
+		data={nearbyObjectsDetails}
+		renderItem={({ item }) => <ObjectsListItem data={item} />}
+		keyExtractor={(item) => item.id} />
 
 	return (
 		<View style={{ flex: 1 }}>
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Objects nearby</Text>
 			<Text style={{ fontSize: 20 }}>Interaction range: {100 + amuletLevel}m</Text>
-			<FlatList style={{ flex: 1 }}
-				data={nearbyObjectsDetails}
-				renderItem={({ item }) => <ObjectsListItem data={item} />}
-				keyExtractor={(item) => item.id} />
+			{content}
 			<StyledButton title="v close v" onPress={navigation.goBack} />
 		</View>
 	)
