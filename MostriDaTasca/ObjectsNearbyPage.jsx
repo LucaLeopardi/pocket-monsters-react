@@ -11,14 +11,14 @@ export default function ObjectsNearbyPage({ navigation }) {
 	const { nearbyObjects } = useContext(Context.NearbyEntities)
 	const [nearbyObjectsDetails, setNearbyObjectsDetails] = useState(null)
 
-	const getObjectAndDistance = async (obj) => {
+	const getAllObjectProperties = async (obj) => {
 		return database.getObjectByID(sid, obj.id)
-			.then((data) => ({ ...data, distance: obj.distance, withinRange: obj.withinRange }))
+			.then((data) => ({ ...data, lat: obj.lat, lon: obj.lon, distance: obj.distance, withinRange: obj.withinRange }))	// Add back properties not in database
 	}
 
 	useEffect(
 		() => {
-			Promise.all(nearbyObjects.map((obj) => getObjectAndDistance(obj)))
+			Promise.all(nearbyObjects.map((obj) => getAllObjectProperties(obj)))
 				.then((objs) => objs.sort((a, b) => a.distance - b.distance))
 				.then(setNearbyObjectsDetails)	// Calling setNearbyObjectsDetails triggers a re-render
 		}, [nearbyObjects])

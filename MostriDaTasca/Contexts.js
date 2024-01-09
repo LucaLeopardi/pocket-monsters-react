@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import StorageManager from './StorageManager'
 import CommunicationController from './CommunicationController'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as ExpoLocation from 'expo-location'
 import * as geolib from 'geolib'
 
@@ -17,8 +18,14 @@ const PlayerProvider = ({ children }) => {
 		armorLevel: 0,		// Currently unused
 		amuletLevel: 0,		// Used for client side interaction range calculation
 	})
-	const updatePlayer = (newProperties) => setPlayer((oldProperties) => ({ ...oldProperties, ...newProperties }))
+	const updatePlayer = (newProperties) => {
+		setPlayer((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
+		for (const [key, value] of Object.entries(newProperties)) {
+			try { AsyncStorage.setItem(key, value.toString(), console.log("Saved " + key + " to AsyncStorage.")) }
+			catch (error) { console.log("ERROR: AsyncStorage: ", error) }
+		}
+	}
 	return (
 		<Player.Provider value={{ player, updatePlayer }}>
 			{children}
@@ -79,6 +86,7 @@ const NearbyEntitiesProvider = ({ children }) => {
 			CommunicationController.getUsersNearby(sid, lat, lon)
 				.then((res) => res.filter((user) => user.uid != uid))
 				.then(setNearbyUsers)
+
 			console.log("Getting objects nearby...")
 			CommunicationController.getObjectsNearby(sid, lat, lon)
 				.then((objs) => objs.map((obj) => {

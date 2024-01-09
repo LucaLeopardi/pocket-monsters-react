@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Context from "./Contexts";
 import * as Location from "expo-location";
@@ -6,13 +6,16 @@ import { ActivityIndicator, View } from "react-native";
 
 export default function InitialPage({ navigation }) {
 
-	const { updatePlayer } = useContext(Context.Player)
+	const { player, updatePlayer } = useContext(Context.Player)
 	const { updateLocation } = useContext(Context.Location)
+	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
 		checkLocationPermission()
-		checkAlreadyRegistered()
+		loadAsyncStorage()
 	}, [])
+
+	useEffect(() => { checkAlreadyRegistered() }, [loading])
 
 	const checkLocationPermission = async () => {
 		let result = await Location.getForegroundPermissionsAsync()
@@ -28,19 +31,30 @@ export default function InitialPage({ navigation }) {
 		updateLocation({ permission: result.status })
 	}
 
-	const checkAlreadyRegistered = async () => {
-		let storedUID
-		let storedSID
-		try {
-			storedUID = parseInt(await AsyncStorage.getItem("uid"))
-			storedSID = await AsyncStorage.getItem("sid")
-			updatePlayer({ uid: storedUID, sid: storedSID })
-			console.log("Stored UID: " + storedUID + " | Stored SID: " + storedSID)
-		} catch (error) {
-			console.log("ERROR: AsyncStorage: ", error)
+	const loadAsyncStorage = async () => {
+		let temp = {}
+		for (const [key, value] of Object.entries(player)) {
+			let storedValue
+			try {
+				if (key === "sid") storedValue = await AsyncStorage.getItem(key)	// SID is the only string,
+				else {																// the rest are integers
+					storedValue = parseInt(await AsyncStorage.getItem(key))
+					storedValue = isNaN(storedValue) ? 0 : storedValue
+				}
+			} catch (error) {
+				console.log("ERROR: AsyncStorage: ", error)
+			}
+			temp = { ...temp, [key]: storedValue }
 		}
+		console.log("Loaded from AsyncStorage: ", temp)
+		updatePlayer(temp)
+		setLoading(false)
+	}
+
+	const checkAlreadyRegistered = async () => {
+		if (loading) return
 		// If SID/UID were saved locally, user has registered already. Navigate to app.
-		if (storedUID && storedSID) {
+		if (player.uid && player.sid) {
 			console.log("Navigating from Initial to Main...")
 			navigation.reset({
 				index: 0,

@@ -2,7 +2,6 @@ import { View, Text, Linking, Pressable, Image, ActivityIndicator } from 'react-
 import CommunicationController from './CommunicationController'
 import { useContext, useState } from 'react'
 import * as Context from './Contexts'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyledButton } from './CustomComponents'
 
 export default function RegistrationPage({ navigation }) {
@@ -15,12 +14,6 @@ export default function RegistrationPage({ navigation }) {
 
 		const { sid: newSid, uid: newUid } = await CommunicationController.registerUser()
 		console.log("New UID: " + newUid + " | New SID: " + newSid)
-
-		try { AsyncStorage.setItem("uid", newUid.toString(), console.log("Saved UID to AsyncStorage.")) }
-		catch (error) { console.log("ERROR: AsyncStorage: ", error) }
-
-		try { AsyncStorage.setItem("sid", newSid, console.log("Saved SID to AsyncStorage.")) }
-		catch (error) { console.log("ERROR: AsyncStorage: ", error) }
 
 		updatePlayer({ uid: newUid, sid: newSid })
 

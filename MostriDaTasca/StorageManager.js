@@ -14,7 +14,6 @@ export default class StorageManager {
 					name TEXT, \
 					lat DOUBLE, \
 					lon DOUBLE, \
-					time TEXT, \
 					life INTEGER, \
 					experience INTEGER, \
 					weapon INTEGER, \
@@ -30,8 +29,6 @@ export default class StorageManager {
 					id INTEGER PRIMARY KEY,\
 					type TEXT,\
 					level INTEGER,\
-					lat DOUBLE,\
-					lon DOUBLE,\
 					image TEXT,\
 					name TEXT)",
 			args: []
@@ -39,7 +36,7 @@ export default class StorageManager {
 		this.db.execAsync([createUsersTableQuery, createObjectsTableQuery], false).then(results => this.checkResultsAndReturn(results))
 	}
 
-	// UTILITIES
+	// UTILITY
 	// Apparently execAsync does not throw errors, but returns them in the results array which needs to be checked
 	checkResultsAndReturn(results) {
 		for (let result of results) {
@@ -61,54 +58,20 @@ export default class StorageManager {
 		}
 		this.db.execAsync([query], false).then(results => this.checkResultsAndReturn(results))
 	}
-	/*
-		async updateUser(uid, name = null, picture = null, positionshare = null) {
-			let sql = "UPDATE Users SET ";
-			let args = [];
-			let params = [];
-	
-			if (name !== null) {
-				params.push("name = ?");
-				args.push(name);
-			}
-	
-			if (picture !== null) {
-				params.push("picture = ?");
-				args.push(picture);
-			}
-	
-			if (positionshare !== null) {
-				params.push("positionshare = ?");
-				args.push(positionshare);
-			}
-	
-			sql += params.join(", ") + " WHERE uid = ?";
-			args.push(uid);
-	
-			let query = { sql, args };
-			this.db.execAsync([query], false).then(results => this.checkResultsAndReturn(results));
-		}
-	*/
 
 	// !!! Replaces User data, deleting previous fields if not specified in user object argument
 	async insertOrReplaceUser(user) {	// Takes an object to allow for named parameters
 
-		const { uid, name = null, lat = null, lon = null, time = null, life = null, experience = null, weapon = null, armor = null, amulet = null, picture = null, profileversion = null, positionshare = null } = user
+		const { uid, name = null, lat = null, lon = null, life = null, experience = null, weapon = null, armor = null, amulet = null, picture = null, profileversion = null, positionshare = null } = user
 
-		let sql = "INSERT OR REPLACE INTO Users (uid, name, lat, lon, time, life, experience, weapon, armor, amulet, picture, profileversion, positionshare) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+		let sql = "INSERT OR REPLACE INTO Users (uid, name, lat, lon,  life, experience, weapon, armor, amulet, picture, profileversion, positionshare) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
 
-		let args = [uid, name, lat, lon, time, life, experience, weapon, armor, amulet, picture, profileversion, positionshare]
+		let args = [uid, name, lat, lon, life, experience, weapon, armor, amulet, picture, profileversion, positionshare]
 
 		let query = { sql, args }
 		this.db.execAsync([query], false).then(results => this.checkResultsAndReturn(results))
 	}
-	/*
-		async getAllUsers() {
-			let query = { sql: "SELECT * FROM Users", args: [] }
-			let results = await (this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results)))
-			return results[0].rows
-		}
-	*/
+
 	async getUserByID(sid, uid, profileversion) {
 		let query = { sql: "SELECT * FROM Users WHERE uid = ?", args: [uid] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))
@@ -132,21 +95,15 @@ export default class StorageManager {
 	// OBJECTS
 
 	async addObject(object) {
-		const { id, type, level, lat, lon, image = null, name } = object
+		const { id, type, level, image = null, name } = object
 
 		let query = {
-			sql: "INSERT INTO Objects (id, type, level, lat, lon, image, name) VALUES (?,?,?,?,?,?,?)",
-			args: [id, type, level, lat, lon, image, name]
+			sql: "INSERT INTO Objects (id, type, level,  image, name) VALUES (?,?,?,?,?)",
+			args: [id, type, level, image, name]
 		}
 		this.db.execAsync([query], false).then(results => this.checkResultsAndReturn(results))
 	}
-	/*
-		async getAllObjects() {
-			let query = { sql: "SELECT * FROM Objects", args: [] }
-			let results = await (this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results)))
-			return results[0].rows
-		}
-	*/
+
 	async getObjectByID(sid, id) {
 		let query = { sql: "SELECT * FROM Objects WHERE id = ?", args: [id] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))

@@ -167,7 +167,7 @@ export function MarkerUser({ user, disabled = false }) {
 		/>)
 }
 
-export function MarkerObject({ object }) {
+export function MarkerObject({ object, disabled = false }) {
 	let image = getObjectTypeIcon(object.type)
 	const { database } = useContext(Context.Database)
 	const { player: { sid } } = useContext(Context.Player)
@@ -181,15 +181,16 @@ export function MarkerObject({ object }) {
 			flat={true}
 			anchor={{ x: 0.5, y: 0.5 }}
 			onPress={async () => {
+				if (disabled) return
 				let data = await database.getObjectByID(sid, object.id)
-				data = { ...data, distance: object.distance, withinRange: object.withinRange }	// Have to re-add distance as it's not stored in the database
+				data = { ...data, lat: object.lat, lon: object.lon, distance: object.distance, withinRange: object.withinRange }	// Have to re-add properties not stored in the database
 				if (data.image) image = { uri: 'data:image/png;base64,' + data.image }
 				navigation.navigate('ObjectDetails', { data, image })
 			}}
 		/>)
 }
 
-const getObjectTypeIcon = (type) => {
+export const getObjectTypeIcon = (type) => {
 	switch (type) {
 		case "monster":
 			return require('./assets/monster_icon.png')
