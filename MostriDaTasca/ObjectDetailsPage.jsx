@@ -102,12 +102,11 @@ export default function ObjectDetailsPage({ navigation, route }) {
 
 
 	return (
-		<View>
+		<View style={styles.container}>
 			<Modal visible={shouldOverlayShow} animationType='fade' transparent={true} >
 				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
 				<ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
 			</Modal>
-			<StyledButton title="< Back" onPress={navigation.goBack} />
 			<Text style={{ fontSize: 30, fontWeight: 'bold' }}>{data.name}</Text>
 			<Image source={image} style={{ width: 200, height: 200 }} />
 			<Text style={{ fontSize: 20, textTransform: 'uppercase' }}>Level {data.level} {data.type}</Text>
@@ -133,6 +132,7 @@ export default function ObjectDetailsPage({ navigation, route }) {
 				<MarkerObject object={data} disabled={true} />
 			</MapView>
 			<Text style={{ fontSize: 16, fontStyle: 'italic' }}>Distance: {data.distance}m</Text>
+			<StyledButton title="v Close v" onPress={navigation.goBack} />
 		</View>
 	)
 }

@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import UsersListItem from './UsersListItem'
 import * as Context from './Contexts'
-import { StyledButton } from './CustomComponents'
+import { StyledButton, styles } from './CustomComponents'
 
 export default function UsersNearbyPage({ navigation }) {
 
@@ -20,7 +20,7 @@ export default function UsersNearbyPage({ navigation }) {
 	if (nearbyUsersDetails === null) return <ActivityIndicator size='large' color='#0000ff' />
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={styles.container}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Players nearby</Text>
 			<FlatList style={{ flex: 1 }}
 				data={nearbyUsersDetails}

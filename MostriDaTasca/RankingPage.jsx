@@ -3,7 +3,7 @@ import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
 import * as Context from './Contexts'
-import { StyledButton } from './CustomComponents'
+import { StyledButton, styles } from './CustomComponents'
 
 export default function RankingPage({ navigation }) {
 
@@ -30,7 +30,7 @@ export default function RankingPage({ navigation }) {
 		keyExtractor={(item) => item.uid} />
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={styles.container}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Top players</Text>
 			{content}
 			<StyledButton title="v close v" onPress={navigation.goBack} />

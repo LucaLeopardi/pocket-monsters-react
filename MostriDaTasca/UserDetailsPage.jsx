@@ -7,8 +7,7 @@ export default function UserDetailsPage({ navigation, route }) {
 	const { data, image } = route.params
 
 	return (
-		<View>
-			<StyledButton title="< Back" onPress={navigation.goBack} />
+		<View style={styles.container}>
 			<Text style={{ fontSize: 32, fontWeight: 'bold' }}>{data.name}</Text>
 			<Image source={image} style={{ width: 200, height: 200 }} />
 			<Text>HP: {data.life} | XP: {data.experience}</Text>
@@ -29,6 +28,7 @@ export default function UserDetailsPage({ navigation, route }) {
 				pitchEnabled={false}>
 				<MarkerUser user={data} disabled={true} />
 			</MapView>
+			<StyledButton title="v Close v" onPress={navigation.goBack} />
 		</View>
 	)
 }

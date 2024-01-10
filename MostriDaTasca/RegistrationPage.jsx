@@ -2,7 +2,7 @@ import { View, Text, Linking, Pressable, Image, ActivityIndicator } from 'react-
 import CommunicationController from './CommunicationController'
 import { useContext, useState } from 'react'
 import * as Context from './Contexts'
-import { StyledButton } from './CustomComponents'
+import { StyledButton, styles } from './CustomComponents'
 
 export default function RegistrationPage({ navigation }) {
 
@@ -25,7 +25,7 @@ export default function RegistrationPage({ navigation }) {
 	}
 
 	return (
-		<View>
+		<View style={styles.container}>
 			<Text style={{ fontSize: 50, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
 			<Image source={require('./assets/app_icon.png')} style={{ width: 100, height: 100 }} />
 			{signUpPressed ?

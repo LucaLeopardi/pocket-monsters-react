@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import * as Context from './Contexts'
 import ObjectsListItem from './ObjectsListItem'
-import { StyledButton } from './CustomComponents'
+import { StyledButton, styles } from './CustomComponents'
 
 export default function ObjectsNearbyPage({ navigation }) {
 
@@ -33,7 +33,7 @@ export default function ObjectsNearbyPage({ navigation }) {
 		keyExtractor={(item) => item.id} />
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={styles.container}>
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Objects nearby</Text>
 			<Text style={{ fontSize: 20 }}>Interaction range: {100 + amuletLevel}m</Text>
 			{content}

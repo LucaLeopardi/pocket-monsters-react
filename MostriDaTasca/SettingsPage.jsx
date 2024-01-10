@@ -1,7 +1,7 @@
 import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
 import * as Context from './Contexts'
-import { UserSettingsContent, StyledButton, EquipmentSlot } from './CustomComponents'
+import { UserSettingsContent, StyledButton, EquipmentSlot, styles } from './CustomComponents'
 
 export default function SettingsPage({ navigation, route }) {
 
@@ -37,15 +37,17 @@ export default function SettingsPage({ navigation, route }) {
 
 	// After data has been loaded
 	return (
-		<View>
-			{/* "Back" button is not rendered it firstAccess is passed as route param */}
-			{route.params?.firstAccess !== true && (<StyledButton title="< Back" onPress={navigation.goBack} />)}
+		<View style={styles.container}>
 			<UserSettingsContent profile={profile} />
+			{/* "Back" button and equipment is not rendered if firstAccess is passed as route param */}
 			{route.params?.firstAccess !== true && (
-				<View style={{ flexDirection: 'row' }}>
-					<EquipmentSlot type='weapon' object={weapon} />
-					<EquipmentSlot type='armor' object={armor} />
-					<EquipmentSlot type='amulet' object={amulet} />
+				<View>
+					<View style={{ flexDirection: 'row' }}>
+						<EquipmentSlot type='weapon' object={weapon} />
+						<EquipmentSlot type='armor' object={armor} />
+						<EquipmentSlot type='amulet' object={amulet} />
+					</View>
+					<StyledButton title="v Close v" onPress={navigation.goBack} />
 				</View>
 			)}
 		</View>

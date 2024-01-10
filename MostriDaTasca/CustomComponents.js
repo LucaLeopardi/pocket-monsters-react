@@ -7,8 +7,8 @@ import CommunicationController from './CommunicationController';
 import * as ImagePicker from 'expo-image-picker'
 
 
-export const StyledButton = ({ title = null, image = null, onPress = null, disabled = false }) =>
-	<TouchableOpacity onPress={onPress} style={[styles.button, { opacity: disabled ? 0.4 : 1 }]} disabled={disabled} >
+export const StyledButton = ({ title = null, image = null, onPress = null, disabled = false, style = null }) =>
+	<TouchableOpacity onPress={onPress} style={[styles.button, { opacity: disabled ? 0.4 : 1 }, style]} disabled={disabled} >
 		<View>
 			{title ? <Text style={styles.buttonText}>{title}</Text> : null}
 			{image ? <Image source={image} /> : null}
@@ -65,11 +65,14 @@ export const UserSettingsContent = ({ profile }) => {
 
 	const shouldConfirmBeDisabled = () => {
 		// TODO: fix changing only with changing sharePosition ???
-		return newProfile.name === newProfile.picture === newProfile.sharePosition === null || newProfile.sharePosition == profile.positionshare
+		return (
+			newProfile.name === null &&
+			newProfile.picture === null &&
+			(newProfile.sharePosition === null || newProfile.sharePosition == profile.positionshare))
 	}
 
 	return (
-		<View>
+		<View style={styles.container}>
 			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Your profile</Text>
 			<View style={{ flexDirection: 'row' }}>
 				<Image source={require('./assets/edit_icon.png')} style={{ width: 50, height: 50 }} />

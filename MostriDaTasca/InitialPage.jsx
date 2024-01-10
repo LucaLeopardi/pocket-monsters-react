@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Context from "./Contexts";
 import * as Location from "expo-location";
 import { ActivityIndicator, View } from "react-native";
+import { styles } from "./CustomComponents";
 
 export default function InitialPage({ navigation }) {
 
@@ -71,7 +72,7 @@ export default function InitialPage({ navigation }) {
 	}
 
 	return (
-		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+		<View style={styles.container}>
 			<ActivityIndicator size="large" color="#0000ff" />
 		</View>
 	)

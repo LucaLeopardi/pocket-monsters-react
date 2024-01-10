@@ -51,29 +51,11 @@ export default function MainPage({ navigation, route }) {
 	const playerMaker = <MarkerPlayer lat={lat} lon={lon} />
 
 	return (
-		<View style={{ flex: 1 }}>
-			{/* Pop-up window, shown after object interaction */}
-			{/* TODO: Fix StatusBar becoming visible when the Modal is. EDIT: Apparently it's an unresolved issue with Modal. */}
-			<Modal visible={shouldPopUpShow} animationType='fade' transparent={true}>
-				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
-				<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-					<View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-						<Text>{popUpMessage}</Text>
-						<StyledButton title="OK" onPress={() => setShouldPopUpShow(false)} />
-					</View>
-				</View>
-			</Modal>
-
+		<View style={styles.container}>
 			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
-			<StyledButton image={require('./assets/settings_icon.png')} onPress={() => navigation.navigate("Settings")} />
-			<StyledButton title="Objects nearby" onPress={() => navigation.navigate("ObjectsNearby")} />
-			{/* Whoops. Extra page, not in the specification.
-			<StyledButton title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
-			*/}
-			<StyledButton title="Ranking" onPress={() => navigation.navigate("Ranking")} />
 			<MapView
 				ref={mapRef}
-				style={{ flex: 1 }}
+				style={{ flex: 1, width: '100%', height: '100%' }}
 				customMapStyle={styles.map}
 				toolbarEnabled={false}
 				initialRegion={{
@@ -87,7 +69,36 @@ export default function MainPage({ navigation, route }) {
 				{objectsMarkers}
 				{playerMaker}
 			</MapView>
-			<StyledButton image={require('./assets/position_icon.png')} onPress={() => centerMapToRegion(lat, lon)} />
+			{/* Pop-up window, shown after object interaction */}
+			{/* TODO: Fix StatusBar becoming visible when the Modal is. EDIT: Apparently it's an unresolved issue with Modal. */}
+			<Modal visible={shouldPopUpShow} animationType='fade' transparent={true}>
+				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
+				<View style={styles.container}>
+					<View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+						<Text>{popUpMessage}</Text>
+						<StyledButton title="OK" onPress={() => setShouldPopUpShow(false)} />
+					</View>
+				</View>
+			</Modal>
+			<StyledButton
+				image={require('./assets/settings_icon.png')}
+				onPress={() => navigation.navigate("Settings")}
+				style={{ position: 'absolute', top: 30, right: 30 }} />
+			<StyledButton
+				title="Objects nearby"
+				onPress={() => navigation.navigate("ObjectsNearby")}
+				style={{ position: 'absolute', bottom: 30, left: 30 }} />
+			{/* Whoops. Extra page, not in the specification.
+			<StyledButton title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
+			*/}
+			<StyledButton
+				title="Ranking"
+				onPress={() => navigation.navigate("Ranking")}
+				style={{ position: 'absolute', top: 30, left: 30 }} />
+			<StyledButton
+				image={require('./assets/position_icon.png')}
+				onPress={() => centerMapToRegion(lat, lon)}
+				style={{ position: 'absolute', bottom: 30, right: 30 }} />
 		</View>
 	)
 }

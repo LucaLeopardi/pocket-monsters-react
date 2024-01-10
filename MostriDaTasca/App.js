@@ -32,17 +32,20 @@ export default function App() {
 					<Stack.Screen name="Initial" component={InitialPage} options={{ animation: 'none' }} />
 					<Stack.Screen name="Registration" component={RegistrationPage} />
 					<Stack.Screen name="Main" component={MainPage} options={{ animation: 'fade' }} />
-					<Stack.Screen name="Settings" component={SettingsPage} />
+					<Stack.Screen name="Settings" component={SettingsPage}
+						options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
 					<Stack.Screen name="Ranking" component={RankingPage}
 						options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
 					<Stack.Screen name="ObjectsNearby" component={ObjectsNearbyPage}
 						options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
-					<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage} />
+					<Stack.Screen name="ObjectDetails" component={ObjectDetailsPage}
+						options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
 					{/*	Whoops. Extra page, not in the specification.
 					<Stack.Screen name="UsersNearby" component={UsersNearbyPage}
 					options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
 					*/}
-					<Stack.Screen name="UserDetails" component={UserDetailsPage} />
+					<Stack.Screen name="UserDetails" component={UserDetailsPage}
+						options={{ animation: 'slide_from_bottom', animationDuration: 150 }} />
 					<Stack.Screen name="ErrorPage" component={ErrorPage} options={{ animation: 'none' }} />
 				</Stack.Navigator>
 			</NavigationContainer>
