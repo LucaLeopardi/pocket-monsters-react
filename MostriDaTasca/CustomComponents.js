@@ -64,6 +64,7 @@ export const UserSettingsContent = ({ profile }) => {
 	else image = require('./assets/user_icon.png')
 
 	const shouldConfirmBeDisabled = () => {
+		// TODO: fix changing only with changing sharePosition ???
 		return newProfile.name === newProfile.picture === newProfile.sharePosition === null || newProfile.sharePosition == profile.positionshare
 	}
 
