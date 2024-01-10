@@ -50,6 +50,7 @@ export const UserSettingsContent = ({ profile }) => {
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			base64: true,
 		})
+		if (res.canceled) return console.log("Image selection cancelled")
 		const image = res.assets[0]
 		if (image) {
 			if (image.fileSize > 100 * 1024) alert("Warning: Image too big! Max size is 100 KB")

@@ -22,6 +22,7 @@ const PlayerProvider = ({ children }) => {
 		setPlayer((oldProperties) => ({ ...oldProperties, ...newProperties }))
 
 		for (const [key, value] of Object.entries(newProperties)) {
+			if (!value) continue
 			try { AsyncStorage.setItem(key, value.toString(), console.log("Saved " + key + " to AsyncStorage.")) }
 			catch (error) { console.log("ERROR: AsyncStorage: ", error) }
 		}
