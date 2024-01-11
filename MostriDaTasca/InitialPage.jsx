@@ -12,6 +12,7 @@ export default function InitialPage({ navigation }) {
 	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
+		// TODO: Check internet connection
 		checkLocationPermission()
 		loadAsyncStorage()
 	}, [])
