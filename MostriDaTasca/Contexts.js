@@ -42,8 +42,8 @@ const LocationProvider = ({ children }) => {
 	const updateInterval = 5000		// Also affects NearbyEntities update rate
 
 	const [location, setLocation] = React.useState({
-		lat: 45.46,
-		lon: 9.22,
+		lat: null,
+		lon: null,
 		permission: null,	// Updated in InitialPage
 		time: null
 	})
@@ -54,6 +54,11 @@ const LocationProvider = ({ children }) => {
 			console.log("No location permission")
 			return
 		}
+		// First, faster single location update to initialize app
+		ExpoLocation.getCurrentPositionAsync(
+			{ accuracy: ExpoLocation.Accuracy.High },
+			(res) => updateLocation({ lat: res.coords.latitude, lon: res.coords.longitude, time: res.timestamp }))
+		// Actual location subscription
 		let locationSubscription
 		ExpoLocation.watchPositionAsync(
 			{ accuracy: ExpoLocation.Accuracy.High, timeInterval: updateInterval, distanceInterval: 0 },
@@ -82,7 +87,7 @@ const NearbyEntitiesProvider = ({ children }) => {
 
 	useEffect(
 		() => {
-			if (sid == null) return		// To avoid sending requests at launch before user data is loaded or created
+			if (sid == null || lat === null || lon === null) return		// To avoid sending requests at launch before user data is loaded or created
 
 			console.log("Getting users nearby...")
 			CommunicationController.getUsersNearby(sid, lat, lon)

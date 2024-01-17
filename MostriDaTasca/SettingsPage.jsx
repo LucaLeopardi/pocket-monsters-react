@@ -1,7 +1,10 @@
 import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
 import * as Context from './Contexts'
-import { UserSettingsContent, StyledButton, EquipmentSlot, styles } from './CustomComponents'
+import { UserSettingsContent } from './Custom_components/UserSettingsContent'
+import { StyledButton } from './Custom_components/StyledButton'
+import { EquipmentSlot } from './Custom_components/EquipmentSlot'
+import { styles } from './Custom_components/Styles'
 
 export default function SettingsPage({ navigation, route }) {
 

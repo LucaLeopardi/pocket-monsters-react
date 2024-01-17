@@ -3,7 +3,7 @@ export default class CommunicationController {
 
 	static async request(endpoint, verb, queryParams, bodyParams) {
 		const queryParamsString = new URLSearchParams(queryParams).toString();
-		console.log("Sending " + verb + " request to " + this.BASE_URL + endpoint + "?" + queryParamsString);
+		// console.log("Sending " + verb + " request to " + this.BASE_URL + endpoint + "?" + queryParamsString);
 
 		let fetchData = {
 			method: verb,

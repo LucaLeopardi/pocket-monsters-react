@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
-import UsersListItem from './UsersListItem'
 import * as Context from './Contexts'
-import { StyledButton, styles } from './CustomComponents'
+import UsersListItem from './Custom_components/UsersListItem'
+import { StyledButton } from './Custom_components/StyledButton'
+import { styles } from './Custom_components/Styles'
 
 export default function UsersNearbyPage({ navigation }) {
 

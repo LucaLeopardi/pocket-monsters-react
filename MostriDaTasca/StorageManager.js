@@ -75,7 +75,7 @@ export default class StorageManager {
 	async getUserByID(sid, uid, profileversion) {
 		let query = { sql: "SELECT * FROM Users WHERE uid = ?", args: [uid] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))
-		console.log("Result from local DB:\n", results[0].rows[0])
+		// console.log("Result from local DB:\n", results[0].rows[0])
 		let user
 		if (results[0].rows.length != 0) {
 			user = results[0].rows[0]
@@ -85,7 +85,7 @@ export default class StorageManager {
 
 		console.log("Up-to-date User not found in local DB, getting from server...")
 		user = await CommunicationController.getUserDetails(sid, uid)
-		console.log("Result from server:\n", user)
+		// console.log("Result from server:\n", user)
 		// INSERT to local DB is called, but the server's result is immediately returned for responsiveness
 		this.insertOrReplaceUser(user)
 		return user
@@ -107,7 +107,7 @@ export default class StorageManager {
 	async getObjectByID(sid, id) {
 		let query = { sql: "SELECT * FROM Objects WHERE id = ?", args: [id] }
 		let results = await this.db.execAsync([query], true).then(results => this.checkResultsAndReturn(results))
-		console.log("Result from local DB: ", results[0].rows[0])
+		// console.log("Result from local DB: ", results[0].rows[0])
 		if (results[0].rows.length != 0) return results[0].rows[0]
 
 		console.log("Object not found in local DB, getting from server...")

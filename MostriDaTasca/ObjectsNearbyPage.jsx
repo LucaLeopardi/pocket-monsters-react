@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import * as Context from './Contexts'
-import ObjectsListItem from './ObjectsListItem'
-import { StyledButton, styles } from './CustomComponents'
+import { ObjectsListItem } from './Custom_components/ObjectsListItem'
+import { StyledButton } from './Custom_components/StyledButton'
+import { styles } from './Custom_components/Styles'
 
 export default function ObjectsNearbyPage({ navigation }) {
 

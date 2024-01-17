@@ -2,7 +2,8 @@ import { View, Text, Linking, Pressable, Image, ActivityIndicator } from 'react-
 import CommunicationController from './CommunicationController'
 import { useContext, useState } from 'react'
 import * as Context from './Contexts'
-import { StyledButton, styles } from './CustomComponents'
+import { StyledButton } from './Custom_components/StyledButton'
+import { styles } from './Custom_components/Styles'
 
 export default function RegistrationPage({ navigation }) {
 

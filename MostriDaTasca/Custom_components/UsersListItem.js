@@ -4,7 +4,7 @@ import { View, Text, Pressable, Image } from 'react-native'
 export default function UsersListItem({ data }) {
 	const navigation = useNavigation()
 
-	const image = data.picture ? { uri: 'data:image/png;base64,' + data.picture } : require('./assets/user_icon.png')
+	const image = data.picture ? { uri: 'data:image/png;base64,' + data.picture } : require('../assets/user_icon.png')
 
 	return (
 		<Pressable

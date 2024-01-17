@@ -1,9 +1,10 @@
 import { useEffect, useContext, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { styles } from './Custom_components/Styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Context from "./Contexts";
 import * as Location from "expo-location";
-import { ActivityIndicator, View } from "react-native";
-import { styles } from "./CustomComponents";
+import NetInfo from "@react-native-community/netinfo";
 
 export default function InitialPage({ navigation }) {
 
@@ -12,12 +13,24 @@ export default function InitialPage({ navigation }) {
 	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
-		// TODO: Check internet connection
+		checkInternetConnection()
 		checkLocationPermission()
 		loadAsyncStorage()
 	}, [])
 
 	useEffect(() => { checkAlreadyRegistered() }, [loading])
+
+
+	const checkInternetConnection = async () => {
+		const state = await NetInfo.fetch();
+		if (!state.isConnected || !state.isInternetReachable) {
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'ErrorPage', params: { message: "The app requires an internet connection to function. Please check your connection and relaunch." } }],
+			})
+		}
+		console.log('Internet connection available');
+	}
 
 	const checkLocationPermission = async () => {
 		let result = await Location.getForegroundPermissionsAsync()
@@ -26,7 +39,7 @@ export default function InitialPage({ navigation }) {
 			if (result.status !== "granted") {
 				navigation.reset({
 					index: 0,
-					routes: [{ name: 'ErrorPage', params: { message: "The app requires location permissions to function. Please grant it your App Settings and relaunch the application." } }],
+					routes: [{ name: 'ErrorPage', params: { message: "The app requires location permissions to function. Please grant it your App Settings and relaunch." } }],
 				})
 			}
 		}

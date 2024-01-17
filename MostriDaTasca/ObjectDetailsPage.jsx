@@ -1,9 +1,12 @@
 import { View, Text, Image, Modal, ActivityIndicator } from 'react-native'
-import { MarkerObject, StyledButton, styles } from './CustomComponents'
 import CommunicationController from './CommunicationController'
 import { useContext, useState } from 'react'
 import * as Context from './Contexts'
 import MapView from 'react-native-maps'
+import { MarkerObject } from './Custom_components/Markers'
+import { StyledButton } from './Custom_components/StyledButton'
+import { styles } from './Custom_components/Styles'
+
 
 export default function ObjectDetailsPage({ navigation, route }) {
 
@@ -121,7 +124,7 @@ export default function ObjectDetailsPage({ navigation, route }) {
 				initialRegion={{
 					latitude: data.lat,
 					longitude: data.lon,
-					latitudeDelta: 0.006,	// Set purely by feel,
+					latitudeDelta: 0.002,	// Set purely by feel,
 					longitudeDelta: 0.002,
 				}}
 				// Lock map, to keep it simple. But maybe it would be better to let the user scroll around?

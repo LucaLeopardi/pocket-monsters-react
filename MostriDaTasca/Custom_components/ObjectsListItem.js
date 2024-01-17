@@ -10,19 +10,19 @@ export default function ObjectsListItem({ data }) {
 	else {
 		switch (data.type) {
 			case "monster":
-				image = require('./assets/monster_icon.png')
+				image = require('../assets/monster_icon.png')
 				break
 			case "armor":
-				image = require('./assets/armor_icon.png')
+				image = require('../assets/armor_icon.png')
 				break
 			case "weapon":
-				image = require('./assets/weapon_icon.png')
+				image = require('../assets/weapon_icon.png')
 				break
 			case "amulet":
-				image = require('./assets/amulet_icon.png')
+				image = require('../assets/amulet_icon.png')
 				break
 			case "candy":
-				image = require('./assets/candy_icon.png')
+				image = require('../assets/candy_icon.png')
 		}
 	}
 

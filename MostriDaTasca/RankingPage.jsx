@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
-import UsersListItem from './UsersListItem'
 import CommunicationController from './CommunicationController'
 import * as Context from './Contexts'
-import { StyledButton, styles } from './CustomComponents'
+import { UsersListItem } from './Custom_components/UsersListItem'
+import { StyledButton } from './Custom_components/StyledButton'
+import { styles } from './Custom_components/Styles'
 
 export default function RankingPage({ navigation }) {
 
@@ -16,7 +17,18 @@ export default function RankingPage({ navigation }) {
 			console.log("Getting ranking...")
 			CommunicationController.getRanking(sid)
 				// For each user, get its details
-				.then((ranking) => Promise.all(ranking.map((user) => database.getUserByID(sid, user.uid, user.profileversion))))
+				.then((ranking) => Promise.all(ranking.map(
+					async (userRanking) => {
+						return {
+							...(await database.getUserByID(sid, userRanking.uid, userRanking.profileversion)),
+							// This data is not up-to-date in the database
+							life: userRanking.life,
+							experience: userRanking.experience,
+							lat: userRanking.lat,
+							lon: userRanking.lon
+						}
+					}
+				)))
 				.then(setRanking)	// Calling setRanking triggers a re-render
 		}, [])
 

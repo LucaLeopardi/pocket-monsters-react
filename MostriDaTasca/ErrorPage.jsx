@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { styles } from "./CustomComponents";
+import { styles } from "./Custom_components/Styles";
 
 export default function ErrorPage({ navigation, route }) {
 	return (

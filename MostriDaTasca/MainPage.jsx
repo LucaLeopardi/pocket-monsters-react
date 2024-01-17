@@ -1,9 +1,11 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { View, Text, Modal } from 'react-native'
+import { View, Text, Modal, ActivityIndicator } from 'react-native'
 import * as Location from 'expo-location';
 import MapView, { Circle } from 'react-native-maps';
 import * as Context from './Contexts';
-import { MarkerObject, MarkerPlayer, MarkerUser, StyledButton, styles } from './CustomComponents';
+import { StyledButton } from './Custom_components/StyledButton';
+import { styles } from './Custom_components/Styles';
+import { MarkerObject, MarkerPlayer, MarkerUser } from './Custom_components/Markers';
 
 export default function MainPage({ navigation, route }) {
 
@@ -49,6 +51,8 @@ export default function MainPage({ navigation, route }) {
 	const objectsMarkers = nearbyObjects.map((obj) => <MarkerObject object={obj} key={obj.id} />)
 	const usersMarkers = nearbyUsers.map((user) => <MarkerUser user={user} key={user.uid} />)
 	const playerMaker = <MarkerPlayer lat={lat} lon={lon} />
+
+	if (lat === null || lon === null) return <ActivityIndicator size='large' color='#0000ff' />
 
 	return (
 		<View style={styles.container}>
