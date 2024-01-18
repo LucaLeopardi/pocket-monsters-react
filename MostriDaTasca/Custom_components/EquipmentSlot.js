@@ -1,13 +1,14 @@
 import { Text, Image, View } from 'react-native';
 import { getObjectTypeIcon } from './Markers';
+import { styles } from './Styles';
 
-export const EquipmentSlot = ({ type, object }) => {
+export function EquipmentSlot({ type, object }) {
 	// Empty item slot
 	if (object === null) return (
-		<View>
-			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'capitalize' }}>{type}</Text>
-			<Text style={{ fontSize: 16 }}>Empty</Text>
-			<Image source={getObjectTypeIcon(type)} style={{ width: 100, height: 100, opacity: 0.5 }} />
+		<View style={styles.container}>
+			<Text style={[styles.boldText, { textTransform: 'capitalize' }]}>{type}</Text>
+			<Text style={styles.text}>Empty</Text>
+			<Image source={getObjectTypeIcon(type)} style={{ width: 80, height: 80, opacity: 0.5 }} />
 		</View>
 	);
 
@@ -26,12 +27,12 @@ export const EquipmentSlot = ({ type, object }) => {
 				break;
 		}
 		return (
-			<View>
-				<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>{object.type}</Text>
-				<Text style={{ fontSize: 16, textTransform: 'capitalize' }}>{object.name}</Text>
-				<Image source={object.image ? { uri: 'item:image/png;base64,' + object.image } : getObjectTypeIcon(type)} style={{ width: 100, height: 100 }} />
-				<Text style={{ fontSize: 16 }}>Level {object.level}</Text>
-				<Text style={{ fontSize: 16, fontStyle: 'italic' }}>{description}</Text>
+			<View style={styles.container}>
+				<Text style={[styles.boldText, { textTransform: 'capitalize' }]}>{object.type}</Text>
+				<Text >{object.name}</Text>
+				<Image source={object.image ? { uri: 'item:image/png;base64,' + object.image } : getObjectTypeIcon(type)} style={{ width: 80, height: 80 }} />
+				<Text >Level {object.level}</Text>
+				<Text style={{ fontStyle: 'italic' }}>{description}</Text>
 			</View>
 		);
 	}

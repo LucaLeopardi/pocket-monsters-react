@@ -59,7 +59,7 @@ export function MarkerObject({ object, disabled = false }) {
 			}} />);
 }
 
-export const getObjectTypeIcon = (type) => {
+export function getObjectTypeIcon(type) {
 	switch (type) {
 		case "monster":
 			return require('../assets/monster_icon.png')

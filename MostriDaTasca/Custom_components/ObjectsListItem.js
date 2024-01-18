@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import { Text, Pressable, Image, View } from "react-native";
+import { Text, TouchableOpacity, Image, View } from "react-native";
+import { styles } from "./Styles";
 
 
-export default function ObjectsListItem({ data }) {
+export function ObjectsListItem({ data }) {
 	const navigation = useNavigation()
 
 	let image
@@ -27,13 +28,17 @@ export default function ObjectsListItem({ data }) {
 	}
 
 	return (
-		<Pressable onPress={() => navigation.navigate("ObjectDetails", { data, image })}>
-			<View style={{ opacity: data.withinRange ? 1 : 0.5 }}>
-				<Image source={image} style={{ width: 50, height: 50 }} />
-				<Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.name}</Text>
-				<Text style={{ fontSize: 16 }}>Level {data.level} {data.type}</Text>
-				<Text style={{ fontSize: 16 }}>Distance: {data.distance}m</Text>
+		<TouchableOpacity
+			onPress={() => navigation.navigate("ObjectDetails", { data, image })}
+			style={[styles.listItem, { opacity: data.withinRange ? 1 : 0.6 }]}>
+			<Image source={image} style={styles.roundImage} />
+			<View style={styles.listItemContent}>
+				<Text style={styles.boldText}>{data.name}</Text>
+				<Text>Level {data.level} {data.type}</Text>
 			</View>
-		</Pressable>
+			<View style={{ flex: 1, alignItems: "flex-end" }}>
+				<Text >{data.distance}m</Text>
+			</View>
+		</TouchableOpacity >
 	)
 }

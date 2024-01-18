@@ -3,7 +3,7 @@ import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import CommunicationController from './CommunicationController'
 import * as Context from './Contexts'
 import { UsersListItem } from './Custom_components/UsersListItem'
-import { StyledButton } from './Custom_components/StyledButton'
+import { StyledButton } from './Custom_components/Buttons'
 import { styles } from './Custom_components/Styles'
 
 export default function RankingPage({ navigation }) {
@@ -36,16 +36,16 @@ export default function RankingPage({ navigation }) {
 	let content
 	if (ranking === null) content = <ActivityIndicator style={{ flex: 1 }} size='large' color='#0000ff' />
 	else content = <FlatList
-		style={{ flex: 1 }}
+		style={styles.list}
 		data={ranking}
 		renderItem={({ item }) => <UsersListItem data={item} />}
 		keyExtractor={(item) => item.uid} />
 
 	return (
 		<View style={styles.container}>
-			<Text style={{ fontSize: 20, fontWeight: 'bold' }}>Top players</Text>
+			<Text style={styles.title}>TOP PLAYERS</Text>
 			{content}
-			<StyledButton title="v close v" onPress={navigation.goBack} />
+			<StyledButton title="▼  Close  ▼" onPress={navigation.goBack} />
 		</View>
 	)
 }

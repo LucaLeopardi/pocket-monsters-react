@@ -1,33 +1,117 @@
 import { StyleSheet } from 'react-native';
 
-// STYLING // 
-
-
-
-
+const backgroundColor = '#f7f6f4'
+const primaryColor = '#FFE171'
+const secondaryColor = '#ccc6b2'
 
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		flexGrow: 1,
 		alignItems: 'center',
-		justifyContent: 'center',
+		justifyContent: 'space-between',
+		paddingVertical: 10,
+		backgroundColor: backgroundColor,
 	},
-	button: {
-		backgroundColor: `red`,
-		margin: 2,
-		padding: 10,
+	containerMinusTheMargin: {
+		flex: 1,
+		flexGrow: 1,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		backgroundColor: backgroundColor,
+	},
+	styledButton: {
+		backgroundColor: primaryColor,
+		padding: 12,
 		borderRadius: 5,
 		alignSelf: 'center',
 	},
 	buttonText: {
-		color: `white`,
+		color: 'black',
 		fontSize: 16,
 		fontWeight: 'bold',
 		textTransform: 'uppercase',
 	},
+	imageButton: {
+		backgroundColor: primaryColor,
+		width: 80,
+		height: 80,
+		borderRadius: 40,
+		padding: 10,
+		alignSelf: 'center',
+		position: 'absolute',
+	},
+	imageButtonImage: {
+		width: '100%',
+		height: '100%',
+		resizeMode: 'contain'
+	},
+	title: {
+		fontSize: 30,
+		fontWeight: 'bold',
+		textAlign: 'center',
+	},
+	boldText: {
+		fontWeight: 'bold',
+		fontSize: 18,
+	},
 	text: {
 		fontSize: 16,
+		padding: 5,
+	},
+	profileImage: {
+		width: 150,
+		height: 150,
+		borderRadius: 5,
+	},
+	list: {
+		flex: 1,
+		width: '100%',
+		margin: 10,
+		backgroundColor: secondaryColor,
+		paddingHorizontal: 30,
+		paddingVertical: 3,
+	},
+	listItem: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		padding: 5,
+		borderRadius: 5,
+		marginVertical: 3,
+		backgroundColor: backgroundColor,
+	},
+	listItemContent: {
+		flexDirection: 'column',
+		paddingLeft: 20,
+	},
+	roundImage: {
+		width: 50,
+		height: 50,
+		borderRadius: 25,
+	},
+	minimapContainer: {
+		width: '80%',
+		height: 150,
+		backgroundColor: '#0003',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: 5,
+		margin: 10,
+	},
+	infoBox: {
+		backgroundColor: secondaryColor,
+		padding: 5,
+		borderRadius: 5,
+		marginTop: 0,
+		alignItems: 'center',
+	},
+	popUp: {
+		backgroundColor: backgroundColor,
+		padding: 10,
+		borderRadius: 5,
+		position: 'absolute',
+		alignSelf: 'center',
+		top: '40%',
 	},
 	map: [
 		{

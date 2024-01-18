@@ -2,7 +2,7 @@ import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator } fro
 import { useContext, useEffect, useState } from 'react'
 import * as Context from './Contexts'
 import { UserSettingsContent } from './Custom_components/UserSettingsContent'
-import { StyledButton } from './Custom_components/StyledButton'
+import { StyledButton } from './Custom_components/Buttons'
 import { EquipmentSlot } from './Custom_components/EquipmentSlot'
 import { styles } from './Custom_components/Styles'
 
@@ -33,7 +33,7 @@ export default function SettingsPage({ navigation, route }) {
 	if (profile === null || weapon === undefined || armor === undefined || amulet === undefined) return (
 		<View>
 			{/* "Back" button is not rendered it firstAccess is passed as route param */}
-			{route.params?.firstAccess !== true && (<StyledButton title="< Back" onPress={navigation.goBack} />)}
+			{route.params?.firstAccess !== true && (<StyledButton title="▼  Close  ▼" onPress={navigation.goBack} />)}
 			<ActivityIndicator size='large' color='#0000ff' />
 		</View>
 	)
@@ -45,12 +45,12 @@ export default function SettingsPage({ navigation, route }) {
 			{/* "Back" button and equipment is not rendered if firstAccess is passed as route param */}
 			{route.params?.firstAccess !== true && (
 				<View>
-					<View style={{ flexDirection: 'row' }}>
+					<View style={{ width: '80%', flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10 }}>
 						<EquipmentSlot type='weapon' object={weapon} />
 						<EquipmentSlot type='armor' object={armor} />
 						<EquipmentSlot type='amulet' object={amulet} />
 					</View>
-					<StyledButton title="v Close v" onPress={navigation.goBack} />
+					<StyledButton title="▼  Close  ▼" onPress={navigation.goBack} />
 				</View>
 			)}
 		</View>

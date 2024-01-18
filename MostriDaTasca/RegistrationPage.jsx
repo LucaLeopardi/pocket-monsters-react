@@ -2,7 +2,7 @@ import { View, Text, Linking, Pressable, Image, ActivityIndicator } from 'react-
 import CommunicationController from './CommunicationController'
 import { useContext, useState } from 'react'
 import * as Context from './Contexts'
-import { StyledButton } from './Custom_components/StyledButton'
+import { StyledButton } from './Custom_components/Buttons'
 import { styles } from './Custom_components/Styles'
 
 export default function RegistrationPage({ navigation }) {
@@ -34,8 +34,8 @@ export default function RegistrationPage({ navigation }) {
 				:
 				<StyledButton title="Sign up" onPress={handlePressRegister} />}
 			<Pressable onPress={() => Linking.openURL("https://icons8.com/")}>
-				<Text>Icons by icons8</Text>
+				<Text style={styles.text} > Icons by icons8</Text>
 			</Pressable>
-		</View>
+		</View >
 	)
 }

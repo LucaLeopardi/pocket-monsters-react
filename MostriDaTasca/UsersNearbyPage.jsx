@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import * as Context from './Contexts'
 import UsersListItem from './Custom_components/UsersListItem'
-import { StyledButton } from './Custom_components/StyledButton'
+import { StyledButton } from './Custom_components/Buttons'
 import { styles } from './Custom_components/Styles'
 
 export default function UsersNearbyPage({ navigation }) {
@@ -27,7 +27,7 @@ export default function UsersNearbyPage({ navigation }) {
 				data={nearbyUsersDetails}
 				renderItem={({ item }) => <UsersListItem data={item} />}
 				keyExtractor={(item) => item.uid} />
-			<StyledButton title="v close v" onPress={navigation.goBack} />
+			<StyledButton title="▼  Close  ▼" onPress={navigation.goBack} />
 		</View>
 	)
 }

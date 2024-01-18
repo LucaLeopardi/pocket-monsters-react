@@ -4,7 +4,7 @@ import { useContext, useState } from 'react'
 import * as Context from './Contexts'
 import MapView from 'react-native-maps'
 import { MarkerObject } from './Custom_components/Markers'
-import { StyledButton } from './Custom_components/StyledButton'
+import { StyledButton } from './Custom_components/Buttons'
 import { styles } from './Custom_components/Styles'
 
 
@@ -105,20 +105,21 @@ export default function ObjectDetailsPage({ navigation, route }) {
 
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container]}>
 			<Modal visible={shouldOverlayShow} animationType='fade' transparent={true} >
 				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
 				<ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
 			</Modal>
-			<Text style={{ fontSize: 30, fontWeight: 'bold' }}>{data.name}</Text>
-			<Image source={image} style={{ width: 200, height: 200 }} />
-			<Text style={{ fontSize: 20, textTransform: 'uppercase' }}>Level {data.level} {data.type}</Text>
-			<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{typeData.infoTitle}</Text>
-			<Text style={{ fontSize: 16, fontStyle: 'italic' }}>{typeData.infoText}</Text>
-			{typeData.compareText && <Text style={{ fontSize: 16, fontStyle: 'italic' }}>{typeData.compareText}</Text>}
-			<StyledButton disabled={!data.withinRange} title={data.withinRange ? typeData.buttonText : "Out of range"} onPress={() => activateObject(data)} />
+			<Text style={styles.title}>{data.name}</Text>
+			<Text style={{ fontSize: 20, textTransform: 'capitalize' }}>Level {data.level} {data.type}</Text>
+			<Image source={image} style={styles.profileImage} />
+			<View style={styles.infoBox}>
+				<Text style={styles.boldText}>{typeData.infoTitle}</Text>
+				<Text style={styles.text}>{typeData.infoText}</Text>
+				{typeData.compareText && <Text style={[styles.text, { fontStyle: 'italic' }]}>{typeData.compareText}</Text>}
+			</View>
 			<MapView
-				style={{ width: '80%', height: 200 }}
+				style={styles.minimapContainer}
 				customMapStyle={styles.map}
 				toolbarEnabled={false}
 				initialRegion={{
@@ -135,7 +136,8 @@ export default function ObjectDetailsPage({ navigation, route }) {
 				<MarkerObject object={data} disabled={true} />
 			</MapView>
 			<Text style={{ fontSize: 16, fontStyle: 'italic' }}>Distance: {data.distance}m</Text>
-			<StyledButton title="v Close v" onPress={navigation.goBack} />
-		</View>
+			<StyledButton disabled={!data.withinRange} title={data.withinRange ? typeData.buttonText : "Out of range"} onPress={() => activateObject(data)} />
+			<StyledButton title="▼  Close  ▼" onPress={navigation.goBack} />
+		</View >
 	)
 }

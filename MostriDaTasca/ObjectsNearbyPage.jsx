@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import * as Context from './Contexts'
 import { ObjectsListItem } from './Custom_components/ObjectsListItem'
-import { StyledButton } from './Custom_components/StyledButton'
+import { StyledButton } from './Custom_components/Buttons'
 import { styles } from './Custom_components/Styles'
 
 export default function ObjectsNearbyPage({ navigation }) {
@@ -28,17 +28,17 @@ export default function ObjectsNearbyPage({ navigation }) {
 	let content
 	if (nearbyObjectsDetails === null) content = <ActivityIndicator style={{ flex: 1 }} size='large' color='#0000ff' />
 	else content = <FlatList
-		style={{ flex: 1 }}
+		style={styles.list}
 		data={nearbyObjectsDetails}
 		renderItem={({ item }) => <ObjectsListItem data={item} />}
 		keyExtractor={(item) => item.id} />
 
 	return (
 		<View style={styles.container}>
-			<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Objects nearby</Text>
-			<Text style={{ fontSize: 20 }}>Interaction range: {100 + amuletLevel}m</Text>
+			<Text style={styles.title}>OBJECTS NEARBY</Text>
+			<Text style={styles.text}>Interaction range: {100 + amuletLevel}m</Text>
 			{content}
-			<StyledButton title="v close v" onPress={navigation.goBack} />
+			<StyledButton title="▼  Close  ▼" onPress={navigation.goBack} />
 		</View>
 	)
 }

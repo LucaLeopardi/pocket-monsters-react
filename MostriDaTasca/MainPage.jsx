@@ -3,9 +3,9 @@ import { View, Text, Modal, ActivityIndicator } from 'react-native'
 import * as Location from 'expo-location';
 import MapView, { Circle } from 'react-native-maps';
 import * as Context from './Contexts';
-import { StyledButton } from './Custom_components/StyledButton';
 import { styles } from './Custom_components/Styles';
 import { MarkerObject, MarkerPlayer, MarkerUser } from './Custom_components/Markers';
+import { StyledButton, ImageButton } from './Custom_components/Buttons';
 
 export default function MainPage({ navigation, route }) {
 
@@ -55,8 +55,16 @@ export default function MainPage({ navigation, route }) {
 	if (lat === null || lon === null) return <ActivityIndicator size='large' color='#0000ff' />
 
 	return (
-		<View style={styles.container}>
-			<Text style={{ fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase' }}>Pocket Monsters</Text>
+		<View style={styles.containerMinusTheMargin}>
+			{/* Pop-up window, shown after object interaction */}
+			{/* TODO: Fix StatusBar becoming visible when the Modal is. EDIT: Apparently it's an unresolved issue with Modal. */}
+			<Modal visible={shouldPopUpShow} animationType='fade' transparent={true}>
+				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.4 }} />
+				<View style={styles.popUp}>
+					<Text style={[styles.text, { textAlign: 'center' }]} >{popUpMessage}</Text>
+					<StyledButton title="OK" onPress={() => setShouldPopUpShow(false)} />
+				</View>
+			</Modal >
 			<MapView
 				ref={mapRef}
 				style={{ flex: 1, width: '100%', height: '100%' }}
@@ -68,41 +76,31 @@ export default function MainPage({ navigation, route }) {
 					latitudeDelta: defaultLatitudeDelta,
 					longitudeDelta: defaultLongitudeDelta,
 				}}>
-				<Circle center={{ latitude: lat, longitude: lon }} radius={100 + amuletLevel} fillColor='#f2e24c50' strokeWidth={0} />
+				<Circle center={{ latitude: lat, longitude: lon }} radius={100 + amuletLevel} fillColor='#FFE17150' strokeWidth={0} />
 				{usersMarkers}
 				{objectsMarkers}
 				{playerMaker}
 			</MapView>
-			{/* Pop-up window, shown after object interaction */}
-			{/* TODO: Fix StatusBar becoming visible when the Modal is. EDIT: Apparently it's an unresolved issue with Modal. */}
-			<Modal visible={shouldPopUpShow} animationType='fade' transparent={true}>
-				<View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'white', opacity: 0.5 }} />
-				<View style={styles.container}>
-					<View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-						<Text>{popUpMessage}</Text>
-						<StyledButton title="OK" onPress={() => setShouldPopUpShow(false)} />
-					</View>
-				</View>
-			</Modal>
-			<StyledButton
-				image={require('./assets/settings_icon.png')}
+
+			<ImageButton
+				image={require('./assets/crown_black.png')}
+				onPress={() => navigation.navigate("Ranking")}
+				style={{ top: 50, left: 20 }} />
+			<ImageButton
+				image={require('./assets/settings_icon_black.png')}
 				onPress={() => navigation.navigate("Settings")}
-				style={{ position: 'absolute', top: 30, right: 30 }} />
-			<StyledButton
-				title="Objects nearby"
+				style={{ top: 50, right: 20 }} />
+			<ImageButton
+				image={require('./assets/search_icon_black.png')}
 				onPress={() => navigation.navigate("ObjectsNearby")}
-				style={{ position: 'absolute', bottom: 30, left: 30 }} />
+				style={{ bottom: 30, left: 20 }} />
+			<ImageButton
+				image={require('./assets/position_black.png')}
+				onPress={() => centerMapToRegion(lat, lon)}
+				style={{ bottom: 30, right: 20 }} />
 			{/* Whoops. Extra page, not in the specification.
 			<StyledButton title="Players nearby" onPress={() => navigation.navigate("UsersNearby")} />
 			*/}
-			<StyledButton
-				title="Ranking"
-				onPress={() => navigation.navigate("Ranking")}
-				style={{ position: 'absolute', top: 30, left: 30 }} />
-			<StyledButton
-				image={require('./assets/position_icon.png')}
-				onPress={() => centerMapToRegion(lat, lon)}
-				style={{ position: 'absolute', bottom: 30, right: 30 }} />
-		</View>
+		</View >
 	)
 }
