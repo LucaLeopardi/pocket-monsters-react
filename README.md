@@ -3,7 +3,7 @@
 
 Prototype of a videogame for iOS and Android inspired by a popular mobile game.
 
-React Native implementation of client-side app utilizing SQLite and Google Maps API.
+React Native implementation of client-side app utilizing SQLite and React Native Maps.
 For Java implementation, see [here](https://github.com/LucaLeopardi/pocket-monsters-java).
 
 ---
